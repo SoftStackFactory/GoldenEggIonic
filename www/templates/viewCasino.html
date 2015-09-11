@@ -11,7 +11,7 @@
             <div class="row">
                 <!-- This section is the heading (casino logo, name, ect.) -->
                 <div class="col">
-                    <h3 class="white-text">Casino A</h3>
+                    <h3 class="white-text">{{casino.name}}</h3>
                 </div>
             </div>    
             <div class="row">
@@ -173,6 +173,13 @@
                     <!-- map subsection of viewCasino Page--> 
                     <div ng-show = "buttons.activeButton == 4">
                         <p>Button Bar Working Maping area.</p>
+                        <ui-gmap-google-map center='map.center' zoom='map.zoom'>
+                            <ui-gmap-marker coords="marker.coords" idkey="marker.id" click="markerClick()">
+                                <ui-gmap-window options="windowOptions" closeClick="closeClick()">
+                                    <div>{{casino.name}}</div>
+                                </ui-gmap-window>
+                            </ui-gmap-marker>
+                        </ui-gmap-google-map>
                     </div>
                 </div>
             </div>

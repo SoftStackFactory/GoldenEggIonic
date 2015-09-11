@@ -29,12 +29,20 @@ angular.module('starter.controllers', [])
     $scope.isCasino = true;
 }])
 
-.controller('ViewCasinoCtrl', ['$scope', function($scope){
+.controller('ViewCasinoCtrl', ['$scope','$ionicSideMenuDelegate', 'uiGmapGoogleMapApi', 
+function($scope, $ionicSideMenuDelegate, uiGmapGoogleMapApi){
+    //Didsable opening the sidemenu with a swipe, due to google maps not being able to scroll
+    $ionicSideMenuDelegate.canDragContent(false);
+    $scope.casino = {
+        name: "Casino Royale"
+    };
+    
     $scope.isCasino = true;
+    
     $scope.buttons = {
         activeButton: 0
     };
-
+    
     resetButton();
     
     $scope.infoButtonClicked = function(value){
@@ -47,7 +55,32 @@ angular.module('starter.controllers', [])
         $scope.buttons.activeButton = 0;
     }
     
+    //Google maps Methods
+    var onSuccess = function(position) {
+
+        $scope.map = { center: { latitude: position.coords.latitude, longitude: position.coords.longitude }, zoom: 14 };
+        $scope.marker = {
+            id: 0,
+            coords: { 
+                latitude: position.coords.latitude, 
+                longitude: position.coords.longitude
+            }
+        };
+        $scope.windowOptions = { visible: false };
+    };
+    //Wait until google maps is ready before asking for position
+    uiGmapGoogleMapApi.then(function(maps) {
+        navigator.geolocation.getCurrentPosition(onSuccess, null);
+    });
     
+    $scope.markerClick = function() {
+        $scope.windowOptions.visible = !$scope.windowOptions.visible;
+    };
+    
+    $scope.closeClick = function() {
+        $scope.windowOptions.visible = false;
+    };
+
 }])
 
 .controller('ManageUsersCtrl',['$scope', 'SSFAlertsService', function($scope, SSFAlertsService) {
