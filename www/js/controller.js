@@ -6,6 +6,7 @@ angular.module('starter.controllers', [])
 .controller('LoginCtrl', ['$scope', function($scope) {
     
     $scope.registerCasinoButtonTapped = function() {
+        console.log(cordova.plugins);
         if(cordova.plugins.email && cordova.plugins.email.isAvailable) {
             cordova.plugins.email.open({
                 to:      'aaguilar@softstackfactory.com',
