@@ -41,7 +41,8 @@ angular.module('starter', ['ionic','starter.controllers', 'SSFAlerts'])
     
     .state('app.login', {
       url: '/login',
-      templateUrl: 'templates/login.html'
+      templateUrl: 'templates/login.html', 
+      controller:'LoginCtrl'
     })
     
     .state('app.signup', {

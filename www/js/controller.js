@@ -1,4 +1,28 @@
+/*global angular*/
+/*global cordova*/
+
 angular.module('starter.controllers', [])
+
+.controller('LoginCtrl', ['$scope', function($scope) {
+    
+    $scope.registerCasinoButtonTapped = function() {
+        if(cordova.plugins.email && cordova.plugins.email.isAvailable) {
+            cordova.plugins.email.open({
+                to:      'aaguilar@softstackfactory.com',
+                subject: 'Casino Registration',
+                body:    '<p>Casino name:</p>'+
+                         '<p>Manager name:</p>'+
+                         '<p>Manager email:</p>'+
+                         '<p>Casino address</p>'+
+                         '<p>Password</p>',
+                isHtml: true
+            },  function () {
+                console.log('email view dismissed');
+            }, this);
+        }
+    };
+    
+}])
 
 .controller('SideMenuCtrl',['$scope', function($scope) {
     $scope.isCasino = true;

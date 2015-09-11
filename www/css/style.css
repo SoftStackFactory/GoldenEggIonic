@@ -18,7 +18,7 @@
 .green-item-active {
     background-color: #02AD2A !important;
 }
-.white-text {
+.white-text, h2 {
     color:white !important;
 }
 
