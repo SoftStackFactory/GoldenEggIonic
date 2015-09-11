@@ -1,0 +1,78 @@
+<ion-view title="Poker World" >
+    <ion-content padding="true" class="has-header background">
+        <form>
+            <!-- Title for Tournaments below. Start of tournament management section -->
+            
+            <div class="row">
+                <div class="col col-offset-10">
+                    <h3 class="title white-text">Tournaments:</h3>
+                </div>
+            </div>
+            <!-- tournaments that are displayed on view today below -->
+            <div class="row">
+                <div class="col col-offset-20">
+                    <span class="input-label white-text">Displayed</span>
+                    <div ng-repeat="tournament in tournaments" ng-filter>
+                        <ul class="list">
+                            <li class="item">    
+                                <ion-checkbox>{{tournament.name}}</ion-checkbox>
+                            </li>
+                        </ul>    
+                    </div> 
+                    <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive">
+                        Example Tournament
+                    </ion-checkbox>
+                    <!-- tournaments that are  not displayed on view today below -->
+                    <span class="input-label white-text">Not Displayed</span>
+                    <div ng-repeat="tournament in tournaments" ng-filter>
+                        <ul class="list">
+                            <li class="item">    
+                                <ion-checkbox>{{tournament.name}}</ion-checkbox>
+                            </li>
+                        </ul>    
+                    </div>  
+                    <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive">
+                        Example Tournament
+                    </ion-checkbox>
+                </div>
+            </div>
+            
+            <!-- Title for Cash Games below. Start of Cash game management section -->
+            
+            <div class="row">
+                <div class="col col-offset-10">
+                    <h3 class="title white-text">Cash Games:</h3>
+                </div>
+            </div>
+            <!-- Cash game templates that are displayed below -->
+            <div class="row">
+                <div class="col col-offset-20">
+                    <span class="input-label white-text">Displayed</span>
+                    <div ng-repeat="cashGame in cashGames">
+                        <ul class="list">
+                            <li class="item">
+                                <ion-checkbox>{{cashGame.name}}</ion-checkbox>
+                            </li>
+                        </ul>    
+                    </div> 
+                    <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive">
+                        Example Cash Game
+                        </ion-checkbox>
+                    <!-- Cash game templates that are not displayed below -->
+                    <span class="input-label white-text">Not Displayed</span>
+                    <div ng-repeat="cashGame in cashGames">
+                        <ul class="list">
+                            <li class="item">
+                                <ion-checkbox>{{cashGame.name}}</ion-checkbox>
+                            </li>
+                        </ul>    
+                    </div> 
+                    <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive">
+                        Example Cash Game
+                    </ion-checkbox>
+                </div>
+            </div>
+            
+        </form>
+    </ion-content>
+</ion-view>

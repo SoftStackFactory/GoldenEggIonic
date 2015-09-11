@@ -1,0 +1,40 @@
+.background{
+    background-color:#444 !important;
+}
+
+.no-border {
+    border-width:0px;
+}
+
+.transparent {
+    background-color:transparent;
+}
+
+.green-item  {
+    background-color: #009924 !important;
+    border-width:0px;
+}
+
+.green-item-active {
+    background-color: #02AD2A !important;
+}
+.white-text {
+    color:white !important;
+}
+
+.bar-balanced {
+    background-color: #009924 !important;
+}
+
+input {
+    color:white !important;
+}
+
+/*input[placeholder] {
+    color:white !important;
+}
+
+Trying to find away to make the placeholder text white. 
+Via the attribute selector.
+
+*/

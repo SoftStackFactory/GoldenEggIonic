@@ -1,0 +1,136 @@
+<ion-view title="Poker World">
+    <ion-content padding="true" class ="has-header background">
+        <form name="tournamentForm" novalidate>
+            <ion-list> 
+            
+                <div class="row">
+                    <div class="col">
+                        <h3 class="white-text">Tournament Info:</h3>
+                    </div>    
+                </div>
+            
+                <!-- Name of the Tournament and Type of Poker -->
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">Tournament Name</span>
+                            <input name="name" type="text" placeholder="" ng-model="tournament.name">
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">Type of Poker</span>
+                            <input name="style" type="text" placeholder="" ng-model="tournament.style">
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Tournament Costs, reloads, and Stack sizes -->
+                
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">Cost of Entry</span>
+                            <input name="entryCost" type="text" placeholder="" ng-model="tournament.entryCost">
+                        </label>
+                    </div>                 
+                    <div class="col">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">Starting Stack</span>
+                            <input name="startStack" type="text" placeholder="" ng-model="tournament.startStack">
+                        </label>
+                    </div>    
+                </div>
+                    
+                    <!-- here is the where reload section begins. The idea is if the checkbox is checked 
+                         then the number, cost, and reload stack input fields.
+                         -->
+                    
+                <div class="row">
+                    <div class="col">
+                        <ion-checkbox class="green-item white-text">Reload?</ion-checkbox>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">Number of Reloads</span>
+                            <input name="reloadNum" type="text" placeholder="" ng-model="tournament.reloadNum">
+                        </label>
+                    </div>    
+                    <div class="col">    
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">Cost of Reloads</span>
+                            <input name="reloadCost" type="text" placeholder="" ng-model="tournament.reloadCost">
+                        </label>
+                    </div>    
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">Reload Stack</span>
+                            <input name="reloadStack" type="text" placeholder="" ng-model="tournament.reloadStack">
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Next Section deals with periods of time regStart, regEnd, levelMins, ect. -->
+                
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">Start of Registeration</span>
+                            <input name="regStart" type="text" placeholder="" ng-model="tournament.regStart">
+                        </label>
+                    </div>
+                    <div class="col">        
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">End of Registeration</span>
+                            <input name="regEnd" type="text" placeholder="" ng-model="tournament.regEnd">
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="row">
+                     <div class="col">       
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">Start Time</span>
+                            <input name="startTime" type="text" placeholder="" ng-model="tournament.startTime">
+                        </label>
+                    </div>
+                    <div class="col">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">Level Length</span>
+                            <input name="levelMinutes" type="text" placeholder="" ng-model="blind.levelMinutes">
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Adding levels and setting the small/big blinds amount -->
+                
+                <div class="row">
+                    <div class="col">
+                        <label>
+                            <span class="input-label white-text">Add levels:</span>
+                        </label>    <!--
+                                    in order to make this feature work i believe will need to write a 
+                                    directive or it'll need to be part of the tournamentTemplate controller
+                                     -->
+                    </div>
+                </div>    
+            </ion-list>
+            
+            <!-- Create tournament Button -->
+            
+            <div class="row">
+                <div class="col">
+                    <button class="button button-assertive button-block" >Create Tournament</button>
+                </div>
+            </div>    
+        </form>
+    </ion-content>
+</ion-view>

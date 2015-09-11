@@ -1,0 +1,182 @@
+<!-- Player view of the viewCasino page and the Casino view are exactly the same expect for the subscription icon-->
+
+<ion-view title="Poker World" >
+        <ion-nav-buttons side="right">
+            <!-- subscription icon hides if user isCasino-->
+            <button class="button icon ion-plus-circled button-positive" ng-hide="isCasino"></button>
+        </ion-nav-buttons>  
+        <ion-nav-view></ion-nav-view>
+    <!-- main body of page content -->
+    <ion-content padding="true" class="has-header background">
+        <div>
+            <div class="row">
+                <!-- This section is the heading (casino logo, name, ect.) -->
+                <div class="col">
+                    <h3 class="white-text">Casino A</h3>
+                </div>
+            </div>    
+            <div class="row">
+                <div class="col">
+                    <div class="button-bar no-border"> <!-- this solves the decision of pushing multiple buttons -->
+                        <button class="button-block button button-assertive" ng-class="{'active':buttons.activeButton==1}" ng-click="infoButtonClicked(1)">Tournaments</button>
+                        <button class="button-block button button-assertive" ng-class="{'active':buttons.activeButton==2}" ng-click="infoButtonClicked(2)">Cash Games</button>
+                        <button class="button-block button button-assertive" ng-class="{'active':buttons.activeButton==3}" ng-click="infoButtonClicked(3)">Posts</button>
+                        <button class="button-block button button-assertive" ng-class="{'active':buttons.activeButton==4}" ng-click="infoButtonClicked(4)">Map</button>
+                    </div>
+                    
+                    <!-- tournament subsection of viewCasino Page --> 
+                    <div ng-show = "buttons.activeButton == 1">
+                        <!-- Tournament Entry and Reload Information -->
+                        <div class="row">
+                            <h3 class="white-text"> Registeration Info</h3>
+                        </div>    
+                        <div>
+                            <div class="row">
+                                <!-- Registration Timer Grid Location and number of reloads -->
+                                <div class="col col-offset-10">
+                                    <h3 class="white-text">Time Left to Register:</h3>
+                                    <div class="row">
+                                        <p class="white-text">countdown timer location</p>
+                                    </div>
+                                    <div class="row">
+                                        <h3 class="white-text"># of Reloads</h3>
+                                    </div>
+                                    <div class="row">
+                                        <p class="white-text"># of Reloads</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Reload and Entry Cost $$$$ -->
+                                <div class="col">
+                                    <h3 class="white-text">Entry Cost</h3>
+                                    <div class="row">
+                                        <p class="white-text">Cost of Entry is blah</p>
+                                    </div>
+                                    <div class="row">
+                                        <h3  class="white-text">Reload Cost</h3>
+                                    </div>
+                                    <div class="row">
+                                        <p  class="white-text">Cost of a reload is blah</p>
+                                    </div>  
+                                </div>
+                                
+                                <!-- Reload and Entry Stack Size -->
+                                <div class="col">
+                                    <h3 class="white-text">Entry Stack</h3>
+                                    <div class="row">
+                                        <p class="white-text">Entry Stack Size</p>
+                                    </div>  
+                                    <div class="row">
+                                        <h3 class="white-text">Reload Stack</h3>
+                                    </div>
+                                    <div class="row">
+                                        <p class="white-text">Reload Stack Size</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- This is Where the tournament specifics are loaded. -->
+                        <div class="row">
+                            <h3 class="white-text">Tournament Info</h3>
+                        </div>    
+                        
+                        <!-- Level Timer Value -->
+                        <div class="row">
+                            <div class="col col-offset-10">
+                                <h3 class="white-text">Level Timer</h3>
+                                <div class="row">
+                                    <p class="white-text">Level Timer value (counting down)</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Current Level and BLind Information -->
+                            <div class="col">
+                                <h3 class="white-text">Current Level</h3>
+                                <div class="row">
+                                    <p class="white-text">Level #</p>
+                                </div>
+                                <div class="row">
+                                    <h3 class="white-text">Blinds</h3>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <p class="white-text">Small: small blind value</p>
+                                    </div>
+                                    <div class="col">
+                                        <p class="white-text">Big: big blind value</p>
+                                    </div>
+                                </div>
+                                
+                            </div>    
+                        </div>    
+                    </div>
+                    
+                    <!-- cash game subsection of viewCasino Page--> 
+                    <div ng-show = "buttons.activeButton == 2">
+                            <!-- Cash game title and type -->
+                            <div class="row">
+                                <div class="col col-offset-10">
+                                    <h3 class="white-text">Low Rider Cash Game</h3>
+                                </div>    
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="col col-offset-10">
+                                        <h3 class="white-text">Type of Poker</h3>
+                                    <div class="row">
+                                        <p class="white-text">Texas Hold'em</p>
+                                    </div>    
+                                    </div>
+                                </div>
+                            </div>    
+                                
+                                <!-- seat down amounts -->
+                                <div class="row">
+                                    <div class="col col-offset-10">
+                                        <h3 class="white-text">Seat Down Amounts</h3>
+                                        <div class="row">
+                                            <div class="col">
+                                                <p class="white-text">min:</p>
+                                                <p class="white-text">$20</p>
+                                            </div>
+                                            <div class="col">
+                                                <p class="white-text">max:</p>
+                                                <p class="white-text">$100</p>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </div>
+                                
+                                <!-- blinds amount -->
+                                <div class="row">
+                                    <div class="col col-offset-10">
+                                        <h3 class="white-text">Blinds</h3>
+                                        <div class="row">
+                                            <div class="col">
+                                                <p class="white-text">small:</p>
+                                                <p class="white-text">$1</p>
+                                            </div>
+                                            <div class="col">
+                                                <p class="white-text">big:</p>
+                                                <p class="white-text">$2</p></p>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </div>
+                    </div>
+                    
+                    <!-- post subsection of viewCasino Page--> 
+                    <div ng-show = "buttons.activeButton == 3">
+                        <p>Button Bar Working Past Posts.</p>
+                    </div>
+                    
+                    <!-- map subsection of viewCasino Page--> 
+                    <div ng-show = "buttons.activeButton == 4">
+                        <p>Button Bar Working Maping area.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,66 @@
+<ion-view title="Poker World" >
+    <ion-content padding="true" class="background">
+        <h2 class="white-text">Admins</h2>
+        <div style="overflow:hidden">
+            <ion-list ng-repeat="user in users">
+                <ion-item class="green-item white-text" ng-click="selectUser(user)" ng-class="{'green-item-active':user == selectedUser}">
+                    {{user.name}}({{user.role}})
+                </ion-item>
+            </ion-list>
+        </div>
+        <div class="button-bar"> <!-- this solves the decision of pushing multiple buttons -->
+            <button class="button-block button button-assertive" ng-class="{'active':buttons.activeButton==1}" ng-click="toolbarButtonClicked(1)">
+                Add
+            </button>
+            <button class="button-block button button-assertive" ng-class="{'active':buttons.activeButton==2}" ng-click="toolbarButtonClicked(2)">
+                Edit
+            </button>
+            <button class="button-block button button-assertive" ng-class="{'active':buttons.activeButton==3}" ng-click="toolbarButtonClicked(3)">
+                Remove
+            </button>
+        </div>
+        <!-- Add user section -->
+        <div ng-show="buttons.activeButton==1">
+            <div class="row">
+                <div class="col">
+                    <label class="item item-input green-item">
+                        <span class="input-label white-text">Name of user</span>
+                        <input type="text" class="white-text" ng-model="newUser.name">
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label class="item item-input green-item">
+                        <span class="input-label white-text">User's email</span>
+                        <input type="text" class="white-text" ng-model="newUser.email">
+                    </label>
+                </div>
+            </div>
+            <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive" ng-model="newUser.mainUser">Main User?</ion-checkbox>
+            <button class="button button-assertive button-block">Submit</button>
+        </div>
+        <!-- Edit user section -->
+        <div ng-show="buttons.activeButton==2">
+            <div class="row">
+                <div class="col">
+                    <label class="item item-input green-item">
+                        <span class="input-label white-text">Name of user</span>
+                        <input type="text" class="white-text" ng-model="managedUser.name">
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label class="item item-input green-item">
+                        <span class="input-label white-text">User's email</span>
+                        <input type="text" class="white-text" ng-model="managedUser.email">
+                    </label>
+                </div>
+            </div>
+            <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive" ng-model="managedUser.mainUser">Main User?</ion-checkbox>
+            <button class="button button-assertive button-block">Submit</button>
+        </div>
+
+    </ion-content>
+</ion-view>
