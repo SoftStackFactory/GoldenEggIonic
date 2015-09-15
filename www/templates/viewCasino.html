@@ -16,170 +16,186 @@
             </div>    
             <div class="row">
                 <div class="col">
-                    <div class="button-bar no-border"> <!-- this solves the decision of pushing multiple buttons -->
-                        <button class="button-block button button-assertive" ng-class="{'active':buttons.activeButton==1}" ng-click="infoButtonClicked(1)">Tournaments</button>
-                        <button class="button-block button button-assertive" ng-class="{'active':buttons.activeButton==2}" ng-click="infoButtonClicked(2)">Cash Games</button>
-                        <button class="button-block button button-assertive" ng-class="{'active':buttons.activeButton==3}" ng-click="infoButtonClicked(3)">Posts</button>
-                        <button class="button-block button button-assertive" ng-class="{'active':buttons.activeButton==4}" ng-click="infoButtonClicked(4)">Map</button>
-                    </div>
+                    <!-- Attempt to make a drop down menu in ionic. Tournament Button. It worked --> 
+                    <button class="button button-full button-assertive icon-right ion-chevron-down" ng-class="{'active':buttons.activeButton==1}" ng-click="infoButtonClicked(1)">Tournaments</button>
                     
-                    <!-- tournament subsection of viewCasino Page --> 
+                    <!-- tournament subsection of viewCasino Page -->
                     <div ng-show = "buttons.activeButton == 1">
-                        <!-- Tournament Entry and Reload Information -->
-                        <div class="row">
-                            <h3 class="white-text"> Registeration Info</h3>
-                        </div>    
-                        <div>
-                            <div class="row">
-                                <!-- Registration Timer Grid Location and number of reloads -->
-                                <div class="col col-offset-10">
-                                    <h3 class="white-text">Time Left to Register:</h3>
-                                    <div class="row">
-                                        <p class="white-text">countdown timer location</p>
-                                    </div>
-                                    <div class="row">
-                                        <h3 class="white-text"># of Reloads</h3>
-                                    </div>
-                                    <div class="row">
-                                        <p class="white-text"># of Reloads</p>
-                                    </div>
-                                </div>
-                                
-                                <!-- Reload and Entry Cost $$$$ -->
-                                <div class="col">
-                                    <h3 class="white-text">Entry Cost</h3>
-                                    <div class="row">
-                                        <p class="white-text">Cost of Entry is blah</p>
-                                    </div>
-                                    <div class="row">
-                                        <h3  class="white-text">Reload Cost</h3>
-                                    </div>
-                                    <div class="row">
-                                        <p  class="white-text">Cost of a reload is blah</p>
-                                    </div>  
-                                </div>
-                                
-                                <!-- Reload and Entry Stack Size -->
-                                <div class="col">
-                                    <h3 class="white-text">Entry Stack</h3>
-                                    <div class="row">
-                                        <p class="white-text">Entry Stack Size</p>
-                                    </div>  
-                                    <div class="row">
-                                        <h3 class="white-text">Reload Stack</h3>
-                                    </div>
-                                    <div class="row">
-                                        <p class="white-text">Reload Stack Size</p>
-                                    </div>
-                                </div>
+                        <!-- Start of the Tournament Information Card -->
+                        <div class="list card card-info">
+                            <div class="item item-divider">
+                                <h3 class="white-text"> Registeration Info</h3>
                             </div>
-                        </div>
-                        
-                        <!-- This is Where the tournament specifics are loaded. -->
-                        <div class="row">
-                            <h3 class="white-text">Tournament Info</h3>
-                        </div>    
-                        
-                        <!-- Level Timer Value -->
-                        <div class="row">
-                            <div class="col col-offset-10">
-                                <h3 class="white-text">Level Timer</h3>
+                            
+                            <div class="item item-body">
+                                <!-- 
+                                Registration Timer Grid Location and Cost of Entry location in the card template
+                                -->
                                 <div class="row">
-                                    <p class="white-text">Level Timer value (counting down)</p>
+                                    <div class="col">
+                                        <h3 class="white-text">Time Left to Register:</h3>
+                                        <p class="white-text">countdown timer location</p> 
+                                    </div>        
+                                    <div class="col">    
+                                        <h3 class="white-text">Entry Cost</h3>
+                                        <p class="white-text">Cost of Entry</p>
+                                    </div>  
+                                </div>
+                                <!-- 
+                                # of Reload and Reload Cost location in the card template
+                                -->
+                                <div class="row">    
+                                    <div class="col">    
+                                        <h3 class="white-text"># of Reloads</h3>
+                                        <p class="white-text"># of Reloads</p>
+                                    </div>  
+                                    <div class="col">    
+                                        <h3 class="white-text">Reload Cost</h3>
+                                        <p class="white-text">Cost of Reload</p>
+                                    </div>   
+                                </div>
+                                <!-- 
+                                Entry Stack and Reload Stack Location in the card template
+                                -->
+                                <div class="row">    
+                                    <div class="col">    
+                                        <h3 class="white-text">Entry Stack</h3></h3>
+                                        <p class="white-text">Size of Entry Stack</p>
+                                    </div>  
+                                    <div class="col">    
+                                        <h3 class="white-text">Reload Stack</h3>
+                                        <p class="white-text">Size of Reload Stack</p>
+                                    </div>   
                                 </div>
                             </div>
                             
-                            <!-- Current Level and BLind Information -->
-                            <div class="col">
-                                <h3 class="white-text">Current Level</h3>
-                                <div class="row">
-                                    <p class="white-text">Level #</p>
+                            <div class="item item-divider">
+                                <h3 class="white-text">Current Tournament Info</h3>
+                            </div>
+                            
+                            <div class="item item-body">
+                            <!-- 
+                                Level Timer and what level the timer is on. Location in the card Template
+                            -->
+                                 <div class="row">    
+                                        <div class="col">    
+                                            <h3 class="white-text">Level Timer</h3></h3>
+                                            <p class="white-text">Count down for the level</p>
+                                        </div>  
+                                        <div class="col">    
+                                            <h3 class="white-text">Level:</h3>
+                                            <p class="white-text">Level # of what level it is (i.e. 1 or 2)</p>
+                                        </div>   
                                 </div>
-                                <div class="row">
-                                    <h3 class="white-text">Blinds</h3>
-                                </div>
+                            <!-- 
+                                The Blinds information. Location in the card Template
+                            -->
                                 <div class="row">
                                     <div class="col">
-                                        <p class="white-text">Small: small blind value</p>
+                                        <h3 class="white-text">Blinds:</h3>
                                     </div>
-                                    <div class="col">
-                                        <p class="white-text">Big: big blind value</p>
-                                    </div>
+                                </div>    
+                                <div class="row">    
+                                        <div class="col">    
+                                            <p class="white-text">Small: 50</p>
+                                        </div>  
+                                        <div class="col">    
+                                            <p class="white-text">Big: 100</p>
+                                        </div>
                                 </div>
-                                
-                            </div>    
+                            </div>
                         </div>    
                     </div>
                     
+                    <!-- Attempt to make a drop down menu in ionic. Cash Game Button -->
+                    <button class="button button-full button-assertive  icon-right ion-chevron-down" ng-class="{'active':buttons.activeButton==2}" ng-click="infoButtonClicked(2)">Cash Games</button>
+                    
                     <!-- cash game subsection of viewCasino Page--> 
                     <div ng-show = "buttons.activeButton == 2">
-                            <!-- Cash game title and type -->
-                            <div class="row">
-                                <div class="col col-offset-10">
-                                    <h3 class="white-text">Low Rider Cash Game</h3>
-                                </div>    
+                        
+                        <!-- Start of the Cash Game Information Card -->
+                        <div class="list card card-info">
+                            <div class="item item-divider">
+                                <h3 class="white-text">Low Rider {{cashGame.name}}</h3>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="col col-offset-10">
-                                        <h3 class="white-text">Type of Poker</h3>
-                                    <div class="row">
-                                        <p class="white-text">Texas Hold'em</p>
-                                    </div>    
+                            <div class="item item-body">
+                                <!-- 
+                                Cash Game Poker Style (game type) in card template
+                                -->
+                                <div class="row">
+                                    <div class="col">
+                                        <h3 class="white-text">Type of Poker:</h3>
+                                        <p class="white-text">{{cashGame.style}}</p> 
+                                    </div>        
+                                </div>
+                                <!-- 
+                                Cash Game Sit Down amounts in the card template
+                                -->
+                                <div class="row">    
+                                    <div class="col">    
+                                        <h3 class="white-text">Sit Down Amounts:</h3>
+                                    </div>
+                                </div>    
+                                <div class="row">
+                                    <div class="col"> 
+                                       <p class="white-text">Min:{{cashGame.min}}</p>
+                                    </div>  
+                                    <div class="col">    
+                                        <p class="white-text">Max:{{cashGame.max}}</p>
+                                    </div>  
+                                </div>
+                                <!-- 
+                                Cash Game Blind Information in Card Template
+                                -->
+                                <div class="row">
+                                    <div class="col">
+                                        <h3 class="white-text">Blinds:</h3></h3>
                                     </div>
                                 </div>
-                            </div>    
-                                
-                                <!-- seat down amounts -->
-                                <div class="row">
-                                    <div class="col col-offset-10">
-                                        <h3 class="white-text">Seat Down Amounts</h3>
-                                        <div class="row">
-                                            <div class="col">
-                                                <p class="white-text">min:</p>
-                                                <p class="white-text">$20</p>
-                                            </div>
-                                            <div class="col">
-                                                <p class="white-text">max:</p>
-                                                <p class="white-text">$100</p>
-                                            </div>
-                                        </div>
+                                <div class="row">    
+                                    <div class="col">    
+                                        <p class="white-text">Small:{{cashGame.smallBlind}}</p>
                                     </div>  
+                                    <div class="col">    
+                                        <p class="white-text">Big:{{cashGame.bigBlind}}</p>
+                                    </div>   
                                 </div>
-                                
-                                <!-- blinds amount -->
-                                <div class="row">
-                                    <div class="col col-offset-10">
-                                        <h3 class="white-text">Blinds</h3>
-                                        <div class="row">
-                                            <div class="col">
-                                                <p class="white-text">small:</p>
-                                                <p class="white-text">$1</p>
-                                            </div>
-                                            <div class="col">
-                                                <p class="white-text">big:</p>
-                                                <p class="white-text">$2</p></p>
-                                            </div>
-                                        </div>
-                                    </div>  
-                                </div>
+                            </div>
+                        </div>
                     </div>
+                    
+                    
+                    <button class="button button-full button-assertive  icon-right ion-chevron-down" ng-class="{'active':buttons.activeButton==3}" ng-click="infoButtonClicked(3)">Posts</button>
                     
                     <!-- post subsection of viewCasino Page--> 
                     <div ng-show = "buttons.activeButton == 3">
-                        <p>Button Bar Working Past Posts.</p>
+                        <div class="list card card-info">
+                            <div class="item item-avatar">
+                                <!-- <img src="casino pic"> -->
+                                <h2 class="white-text">{{casino.name}}</h2>
+                                <p class="white-text">November 05, 1955 (date)</p>
+                            </div>
+                            <div class="item item-body">
+                                <p class="white-text">Casino Posts info here blah blah {{casino.post}}</p>
+                            </div>  
+                        </div>    
                     </div>
                     
+                     <button class="button button-full button-assertive  icon-right ion-chevron-down" ng-class="{'active':buttons.activeButton==4}" ng-click="infoButtonClicked(4)">Map</button>
+                    
                     <!-- map subsection of viewCasino Page--> 
-                    <div ng-show = "buttons.activeButton == 4">
-                        <p>Button Bar Working Maping area.</p>
-                        <ui-gmap-google-map center='map.center' zoom='map.zoom'>
-                            <ui-gmap-marker coords="marker.coords" idkey="marker.id" click="markerClick()">
-                                <ui-gmap-window options="windowOptions" closeClick="closeClick()">
-                                    <div>{{casino.name}}</div>
-                                </ui-gmap-window>
-                            </ui-gmap-marker>
-                        </ui-gmap-google-map>
+                    <div ng-if = "buttons.activeButton == 4">
+                        <!--div class="item item-body"-->
+                            <div id="mapContainer" data-tap-disabled="true">
+                                <ui-gmap-google-map control='map.control' center='map.center' zoom='map.zoom' ng-cloak>
+                                    <ui-gmap-marker coords="marker.coords" idkey="marker.id" click="markerClick()">
+                                        <ui-gmap-window options="windowOptions" closeClick="closeClick()">
+                                            <div>{{casino.name}}</div>
+                                        </ui-gmap-window>
+                                    </ui-gmap-marker>
+                                </ui-gmap-google-map>
+                            </div>
+                        <!--/div-->
                     </div>
                 </div>
             </div>

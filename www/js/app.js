@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic','starter.controllers', 'SSFAlerts', 'uiGmapgoogle-maps'])
+angular.module('starter', ['ionic','starter.controllers', 'SSFAlerts', 'uiGmapgoogle-maps', 'RESTConnection', 'GoldenEggServices'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -47,7 +47,14 @@ angular.module('starter', ['ionic','starter.controllers', 'SSFAlerts', 'uiGmapgo
     
     .state('app.signup', {
       url: '/signup',
-      templateUrl: 'templates/signup.html'
+      templateUrl: 'templates/signup.html',
+      controller:'RegisterCtrl'
+    })
+    
+    .state('app.mapView', {
+      url: '/map',
+      templateUrl: 'templates/mapView.html',
+      controller:'MapViewCtrl'
     })
     
     .state('app.tournamentTemplate', {
@@ -64,6 +71,7 @@ angular.module('starter', ['ionic','starter.controllers', 'SSFAlerts', 'uiGmapgo
       url: '/manageToday',
       templateUrl: 'templates/casino/manageToday.html'
     })
+    
     .state('app.viewCasino', {
       url: '/viewCasino',
       templateUrl: 'templates/viewCasino.html',
@@ -74,8 +82,11 @@ angular.module('starter', ['ionic','starter.controllers', 'SSFAlerts', 'uiGmapgo
       url: '/manageUsers',
       templateUrl: 'templates/casino/manageUsers.html',
       controller: 'ManageUsersCtrl'
-    })
-    ;
+    });
+    /*.state('app.editingCasinoView', {
+      url: '/editingCasinoView',
+      templateUrl: 'templates/editingCasinoView.html',
+    })*/
 
   // if none of the above states are matched, use this as the fallback
   
@@ -85,8 +96,8 @@ angular.module('starter', ['ionic','starter.controllers', 'SSFAlerts', 'uiGmapgo
 })
 .config(function(uiGmapGoogleMapApiProvider) {
     uiGmapGoogleMapApiProvider.configure({
-        //    key: 'your api key',
+        key: 'AIzaSyDe1iz5XarkeO1vPRUmzonCDbmyvWWS-9U',
         v: '3.20', //defaults to latest 3.X anyhow
-        libraries: 'weather,geometry,visualization'
+        libraries: 'drawing'
     });
 });

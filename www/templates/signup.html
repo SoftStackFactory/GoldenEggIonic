@@ -1,40 +1,88 @@
 <ion-view title="Register">
-    <ion-content padding="true">
-        <form>
+    <ion-content padding="true" class="background">
+    
+        <form name="registerForm" novalidate ng-submit="submitForm(registerForm)">
             <ion-list>
-                <label class="item item-input">
-                    <span class="input-label">First Name</span>
-                    <input type="text" placeholder="">
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">Last Name</span>
-                    <input type="text" placeholder="">
-                </label>
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.firstName.$invalid && registerForm.$submitted}">
+                            <span class="input-label">First Name</span>
+                            <input name="firstName" type="text" ng-model="user.firstName" required>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.lastName.$invalid && registerForm.$submitted}">
+                            <span class="input-label">Last Name</span>
+                            <input name="lastName" type="text" ng-model="user.lastName" required>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.hometown.$invalid && registerForm.$submitted}">
+                            <span class="input-label">Hometown</span>
+                            <input name="hometown" type="text" ng-model="user.hometown">
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.country.$invalid && registerForm.$submitted}">
+                            <span class="input-label">Country</span>
+                            <input name="country" type="text" ng-model="user.country">
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="row" ui-sref="app.mapView">
+                    <div class="col">
+                        <ion-item class="item item-icon-right green-item white-text" >
+                          Set my location
+                          <i class="icon ion-ios-arrow-right"></i>
+                        </ion-item>
+                    </div>
+                </div>
             </ion-list>
-            <label class="item item-input">
-                <span class="input-label">Location</span>
-                <input type="text" placeholder="">
-            </label>
-            <div class="spacer" style="width: 300px; height: 47px;"></div>
+            
+            <div class="spacer" style="width: 300px; height: 27px;"></div>
             <ion-list>
-                <label class="item item-input">
-                    <span class="input-label">Username</span>
-                    <input type="text" placeholder="">
-                </label>
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.username.$invalid && registerForm.$submitted}">
+                            <span class="input-label">Username</span>
+                            <input name="username" type="text" ng-model="user.username" required>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.email.$invalid && registerForm.$submitted}">
+                            <span class="input-label">Email</span>
+                            <input name="email" type="email" ng-model="user.email" required>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.password.$invalid && registerForm.$submitted}">
+                            <span class="input-label" >Password</span>
+                            <input name ="password" type="password" ng-model="user.password" required>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.repeatPassword.$invalid && registerForm.$submitted}">
+                            <span class="input-label">Repeat Password</span>
+                            <input name="repeatPassword" type="password" ng-model="repeatPassword.password" required>
+                        </label>
+                    </div>
+                </div>
             </ion-list>
-            <label class="item item-input">
-                <span class="input-label">Email</span>
-                <input type="email" placeholder="">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Password</span>
-                <input type="text" placeholder="">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Repeat Password</span>
-                <input type="text" placeholder="">
-            </label>
-            <button class="button button-royal button-outline button-block ">Register</button>
+            <button type="submit" class="button button-assertive button-block ">Register</button>
         </form>
     </ion-content>
 </ion-view>

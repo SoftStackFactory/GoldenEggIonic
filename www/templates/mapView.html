@@ -1,0 +1,16 @@
+<ion-view title="Location">
+    <ion-nav-buttons side="right">
+      <button class="button" ng-click="doneButtonTapped()">
+        Done
+      </button>
+    </ion-nav-buttons>
+    
+    <ion-content scroll="false" class="background">
+        <div data-tap-disabled="true">
+             <ui-gmap-google-map  control='map.control' center='map.center' zoom='map.zoom' events="map.events" ng-cloak>
+                <ui-gmap-marker coords="marker.coords" idkey="marker.id">
+                </ui-gmap-marker>
+            </ui-gmap-google-map>
+            </div>
+    </ion-content>
+</ion-view>

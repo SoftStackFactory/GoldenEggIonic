@@ -1,83 +1,84 @@
 <ion-view title="Poker World">
     <ion-content padding="true" class ="has-header background">
-        <form name="tournamentForm" novalidate>
+        <form name="cashGameForm" novalidate>
+            <div class="list card card-info">
+                
             <ion-list> 
-            
                 <!-- Name of the Tournament and Type of Poker -->
-                <div class="row">
-                    <div class="col">
-                        <h3 class="white-text">Cash Game Info:</h3>
-                    </div>    
-                </div>    
-                
-                <div class="row">
-                    <div class="col">
-                        <label class="item item-input green-item">
-                            <span class="input-label white-text">Name</span>
-                            <input class="white-text" name="name" type="text" placeholder="" ng-model="cashGame.name" >
-                        </label>
+                    <div class="item item-divider">
+                        <h3 class="white-text">Cash Game Information:</h3>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label class="item item-input green-item">
-                            <span class="input-label white-text">Type of Poker</span>
-                            <input name="style" type="text" placeholder="" ng-model="cashGame.style">
-                        </label>
+                    
+                    <div class="item item-body">
+                        <div class="row">
+                            <div class="col">
+                                <p class="input-label white-text">Name</p>
+                                <label class="item item-input" id="card-info-input-field" ng-class="{ 'has-errors' : cashGameForm.name.$invalid && cashGameForm.$submitted}">
+                                    <input class="white-text" name="name" type="text" placeholder="" ng-model="cashGame.name" required>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <p class="input-label white-text">Poker Type</p>
+                                <label class="item item-input" id="card-info-input-field" ng-class="{ 'has-errors' : cashGameForm.style.$invalid && cashGameForm.$submitted}">
+                                    <input name="style" type="text" placeholder="" ng-model="cashGame.style" required>
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                
-                <!-- Cash game sit down amounts -->
-                <div class="row">
-                    <div class="col">
-                        <h3 class="white-text">Seat Down Amount:</h3>
+                        <!-- Cash game sit down amounts -->
+                        <div class="item item-divider">
+                            <h4 class="white-text">Seat Down Amounts:</h4>
+                        </div>
+                    <div class="item item-body">    
+                        <div class="row">
+                            <div class="col">
+                                <p class="input-label white-text">Minimum</p>
+                                <label class="item item-input" id="card-info-input-field" ng-class="{ 'has-errors' : cashGameForm.min.$invalid && cashGameForm.$submitted}">
+                                    <input name="min" type="text" placeholder="" ng-model="cashGame.min" required>
+                                </label>
+                            </div>                 
+                            <div class="col">
+                                <p class="input-label white-text">Maximum</p>
+                                <label class="item item-input" id="card-info-input-field" ng-class="{ 'has-errors' : cashGameForm.max.$invalid && cashGameForm.$submitted}">
+                                    <input name="max" type="text" placeholder="" ng-model="cashGame.max" required>
+                                </label>
+                            </div>    
+                        </div>
+                    </div>  
+                    
+                        <!-- Blind sizes -->
+                        <div class="item item-divider">
+                            <h4 class="white-text">Blinds:</h4>
+                        </div>
+                        
+                    <div class="item item-body">    
+                        <div class="row">
+                            <div class="col">
+                                <p class="input-label white-text">Small</p>
+                                <label class="item item-input" id="card-info-input-field" ng-class="{ 'has-errors' : cashGameForm.small.$invalid && cashGameForm.$submitted}">
+                                    <input name="small" type="text" placeholder="" ng-model="cashGame.small" required>
+                                </label>
+                            </div>    
+                            <div class="col">    
+                                <p class="input-label white-text">Big</p>
+                                <label class="item item-input" id="card-info-input-field" ng-class="{ 'has-errors' : cashGameForm.big.$invalid && cashGameForm.$submitted}">
+                                    <input name="big" type="text" placeholder="" ng-model="cashGame.big" required>
+                                </label>
+                            </div>    
+                        </div>
+                    </div>    
+                </ion-list>
+                    <div class="item item-body">   
+                        <div class="row">
+                            <div class="col">
+                                <button class="button button-assertive button-block" type="submit">Create Cash Game</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col">
-                        <label class="item item-input green-item">
-                            <span class="input-label white-text">Min</span>
-                            <input name="min" type="text" placeholder="" ng-model="cashGame.min">
-                        </label>
-                    </div>                 
-                    <div class="col">
-                        <label class="item item-input green-item">
-                            <span class="input-label white-text">Max</span>
-                            <input name="max" type="text" placeholder="" ng-model="cashGame.max">
-                        </label>
-                    </div>    
-                </div>
-                
-                <!-- Blind sizes -->
-                <div class="row">
-                    <div class="col">
-                        <h3 class="white-text">Blinds:</h3>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col">
-                        <label class="item item-input green-item">
-                            <span class="input-label white-text">Small</span>
-                            <input name="small" type="text" placeholder="" ng-model="cashGame.small">
-                        </label>
-                    </div>    
-                    <div class="col">    
-                        <label class="item item-input green-item">
-                            <span class="input-label white-text">Big</span>
-                            <input name="big" type="text" placeholder="" ng-model="cashGame.big">
-                        </label>
-                    </div>    
-                </div>
-                
-               
-            </ion-list>
-            <div class="row">
-                <div class="col">
-                    <button class="button button-assertive button-block" type="submit">Create Cash Game</button>
-                </div>
-            </div>    
+                    
+               </div> 
         </form>
     </ion-content>
 </ion-view>

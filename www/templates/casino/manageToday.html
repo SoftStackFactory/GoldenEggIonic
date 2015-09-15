@@ -2,77 +2,60 @@
     <ion-content padding="true" class="has-header background">
         <form>
             <!-- Title for Tournaments below. Start of tournament management section -->
-            
-            <div class="row">
-                <div class="col col-offset-10">
+        <div class="list card card-info">
+                <div class="item item-divider">
                     <h3 class="title white-text">Tournaments:</h3>
                 </div>
-            </div>
+            <div class="item item-body">
             <!-- tournaments that are displayed on view today below -->
-            <div class="row">
-                <div class="col col-offset-20">
-                    <span class="input-label white-text">Displayed</span>
-                    <div ng-repeat="tournament in tournaments" ng-filter>
-                        <ul class="list">
-                            <li class="item">    
-                                <ion-checkbox>{{tournament.name}}</ion-checkbox>
-                            </li>
-                        </ul>    
-                    </div> 
-                    <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive">
-                        Example Tournament
-                    </ion-checkbox>
-                    <!-- tournaments that are  not displayed on view today below -->
-                    <span class="input-label white-text">Not Displayed</span>
-                    <div ng-repeat="tournament in tournaments" ng-filter>
-                        <ul class="list">
-                            <li class="item">    
-                                <ion-checkbox>{{tournament.name}}</ion-checkbox>
-                            </li>
-                        </ul>    
-                    </div>  
-                    <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive">
-                        Example Tournament
-                    </ion-checkbox>
+                <h4 class="input-label white-text">Displayed</h4>
+                    
+                <div ng-init="tournamentsActive = [{name:'Friday Night Lights'}]">
+                    <ul class="list">
+                        <li class="item"  ng-repeat="tournamentActive in tournamentsActive">    
+                            <ion-checkbox class="white-text">{{tournamentActive.name}}</ion-checkbox>
+                        </li>
+                    </ul>    
+                </div> 
+                <!-- tournaments that are  not displayed on view today below -->
+                <h4 class="input-label white-text">Not Displayed</h4>
+            
+                <div ng-init="tournaments = [{name:'Crazy Monday'},{name:'TUES FUN NIGHT'},{name:'CRAZY THURSDAY'}]">
+                    <ul class="list">
+                        <li class="item"  ng-repeat="tournament in tournaments">    
+                            <ion-checkbox  class="white-text">{{tournament.name}}</ion-checkbox>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            
+        </div>    
             <!-- Title for Cash Games below. Start of Cash game management section -->
-            
-            <div class="row">
-                <div class="col col-offset-10">
-                    <h3 class="title white-text">Cash Games:</h3>
-                </div>
+        <div class="list card card-info">    
+            <div class="item item-divider">
+                <h3 class="title white-text">Cash Games:</h3>
             </div>
             <!-- Cash game templates that are displayed below -->
-            <div class="row">
-                <div class="col col-offset-20">
-                    <span class="input-label white-text">Displayed</span>
-                    <div ng-repeat="cashGame in cashGames">
+            <div class="item item-body">
+                    <h4 class="input-label white-text">Displayed</h4>
+                    <div>
                         <ul class="list">
-                            <li class="item">
-                                <ion-checkbox>{{cashGame.name}}</ion-checkbox>
+                            <li class="item" ng-repeat="cashGame in cashGames | filter:cashGame.displayed | cashGame.displayed=true">
+                                <ion-checkbox class="white-text" ng-model="cashGame.displayed">{{activeCashGame.name}}</ion-checkbox>
                             </li>
                         </ul>    
                     </div> 
-                    <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive">
-                        Example Cash Game
-                        </ion-checkbox>
                     <!-- Cash game templates that are not displayed below -->
-                    <span class="input-label white-text">Not Displayed</span>
-                    <div ng-repeat="cashGame in cashGames">
+                    <h4 class="input-label white-text">Not Displayed</h4>
+                    
+                    <div>
                         <ul class="list">
-                            <li class="item">
-                                <ion-checkbox>{{cashGame.name}}</ion-checkbox>
+                            <li class="item" ng-repeat="cashGame in cashGames | filter:cashGame.displayed | cashGame.displayed=false">
+                                <ion-checkbox class="white-text">{{cashGame.name}}</ion-checkbox>
                             </li>
                         </ul>    
-                    </div> 
-                    <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive">
-                        Example Cash Game
-                    </ion-checkbox>
-                </div>
+                    </div>
+                </div>  
             </div>
-            
         </form>
     </ion-content>
 </ion-view>
