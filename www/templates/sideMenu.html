@@ -3,8 +3,8 @@
     <ion-nav-bar class="bar-balanced">
       <ion-nav-back-button class="button-icon icon ion-ios-arrow-back">Back</ion-nav-back-button>
 
-      <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+      <ion-nav-buttons side="left" >
+        <button class="button button-icon button-clear ion-navicon" ng-hide="hideMenuButton" menu-toggle="left">
         </button>
       </ion-nav-buttons>
     </ion-nav-bar>
@@ -20,7 +20,7 @@
         <!--Player Account -->
         <div ng-hide="isCasino">
             <ion-item class="item-divider">
-              Alex Baker
+              {{titleInfo}}
             </ion-item>
             <ion-item menu-close class="item-icon-right">
               Account
@@ -36,7 +36,7 @@
               My Casinos
               <i class="icon ion-ios-arrow-right"></i>
             </ion-item>
-            <ion-item menu-close class="item-icon-right">
+            <ion-item menu-close class="item-icon-right" ui-sref="app.searchCasino">
               Search
               <i class="icon ion-ios-arrow-right"></i>
             </ion-item>
@@ -45,7 +45,7 @@
          <!--Casino Manage -->
         <div ng-show="isCasino">
             <ion-item class="item-divider">
-              Casino Royale
+              <h2>{{titleInfo}}</h2>
             </ion-item>
             <ion-item menu-close class="item-icon-right" ui-sref="app.manageUsers">
               Admins(Users)
@@ -85,7 +85,7 @@
             <ion-item class="item-divider">
               Posts
             </ion-item>
-            <ion-item menu-close class="item-icon-right">
+            <ion-item menu-close class="item-icon-right" ui-sref="app.createPost">
               Create
               <i class="icon ion-ios-arrow-right"></i>
             </ion-item>
@@ -98,7 +98,7 @@
         <!--Logout -->
         <ion-item class="item-divider">
         </ion-item>
-        <ion-item menu-close class="item-icon-right">
+        <ion-item menu-close class="item-icon-right" ng-click="logout()">
           Logout
           <i class="icon ion-ios-arrow-right"></i>
         </ion-item>

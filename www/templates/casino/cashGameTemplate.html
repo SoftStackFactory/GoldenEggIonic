@@ -1,6 +1,6 @@
 <ion-view title="Poker World">
     <ion-content padding="true" class ="has-header background">
-        <form name="cashGameForm" novalidate>
+        <form name="cashGameForm" novalidate ng-submit="submitTemplate(cashGameForm)">
             <div class="list card card-info">
                 
             <ion-list> 
@@ -58,13 +58,13 @@
                             <div class="col">
                                 <p class="input-label white-text">Small</p>
                                 <label class="item item-input" id="card-info-input-field" ng-class="{ 'has-errors' : cashGameForm.small.$invalid && cashGameForm.$submitted}">
-                                    <input name="small" type="text" placeholder="" ng-model="cashGame.small" required>
+                                    <input name="small" type="text" placeholder="" ng-model="cashGame.smallBlind" required>
                                 </label>
                             </div>    
                             <div class="col">    
                                 <p class="input-label white-text">Big</p>
                                 <label class="item item-input" id="card-info-input-field" ng-class="{ 'has-errors' : cashGameForm.big.$invalid && cashGameForm.$submitted}">
-                                    <input name="big" type="text" placeholder="" ng-model="cashGame.big" required>
+                                    <input name="big" type="text" placeholder="" ng-model="cashGame.bigBlind" required>
                                 </label>
                             </div>    
                         </div>

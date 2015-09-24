@@ -59,23 +59,42 @@ angular.module('starter', ['ionic','starter.controllers', 'SSFAlerts', 'uiGmapgo
     
     .state('app.tournamentTemplate', {
       url: '/tournamentTemplate',
-      templateUrl: 'templates/casino/tournamentTemplate.html'
+      templateUrl: 'templates/casino/tournamentTemplate.html',
+      controller: 'TournamentTemplateCtrl'
     })
     
     .state('app.cashGameTemplate', {
       url: '/cashGameTemplate',
-      templateUrl: 'templates/casino/cashGameTemplate.html'
+      templateUrl: 'templates/casino/cashGameTemplate.html',
+      controller: 'CashGameTemplateCtrl'
     })
     
     .state('app.manageToday', {
       url: '/manageToday',
-      templateUrl: 'templates/casino/manageToday.html'
+      templateUrl: 'templates/casino/manageToday.html',
+      controller: 'ManageTodayCtrl'
     })
     
     .state('app.viewCasino', {
       url: '/viewCasino',
       templateUrl: 'templates/viewCasino.html',
       controller:'ViewCasinoCtrl'
+    })
+    
+    .state('app.myCasino', {
+      url: '/myCasino',
+      templateUrl: 'templates/myCasino.html',
+      controller:'MyCasinoCtrl'
+    })
+    .state('app.searchCasino', {
+      url: '/searchCasino',
+      templateUrl: 'templates/searchCasinos.html',
+      controller:'SearchCasinoCtrl'
+    })
+    .state('app.createPost', {
+      url: '/createPost',
+      templateUrl: 'templates/casino/createPost.html',
+      controller: 'CreatePostCtrl'
     })
     
     .state('app.manageUsers', {

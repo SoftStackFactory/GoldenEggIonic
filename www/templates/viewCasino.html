@@ -3,7 +3,7 @@
 <ion-view title="Poker World" >
         <ion-nav-buttons side="right">
             <!-- subscription icon hides if user isCasino-->
-            <button class="button icon ion-plus-circled button-positive" ng-hide="isCasino"></button>
+            <button class="button icon ion-plus-circled button-clear" ng-hide="isCasino"></button>
         </ion-nav-buttons>  
         <ion-nav-view></ion-nav-view>
     <!-- main body of page content -->
@@ -11,7 +11,7 @@
             <div class="row">
                 <!-- This section is the heading (casino logo, name, ect.) -->
                 <div class="col">
-                    <h3 class="white-text">{{casino.name}}</h3>
+                    <h3 class="white-text">{{casinoInfo.name}}</h3>
                 </div>
             </div>    
             <div class="row">

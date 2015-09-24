@@ -58,6 +58,11 @@ input {
   background-color:#444 !important;
 }
 
+textarea {
+    height: 100px;
+    width: 100%;
+}
+
 /*input[placeholder] {
     color:white !important;
 }

@@ -1,16 +1,12 @@
 <ion-view title="Poker World" >
     <ion-content padding="true" class="background">
-        <h2>Admins</h2>
+        <h2>My Casino's</h2>
         <div style="overflow:hidden">
-            <ion-list ng-repeat="user in users">
-                <ion-item class="green-item white-text" ng-click="selectUser(user)" ng-class="{'green-item-active':user == selectedUser}">
-                    {{user.name}}({{user.role}})
+            <ion-list ng-repeat="casino in casinos">
+                <ion-item class="green-item white-text" ng-click="itemClicked(casino)" ng-class="{'green-item-active':casino == selectedCasino}">
+                    {{casino.name}}
                 </ion-item>
             </ion-list>
         </div>
-            <button class="button-block button-full button-assertive" ng-class="{'active':buttons.activeButton==3}" ng-click="toolbarButtonClicked(3)">
-                Remove
-            </button>
-
     </ion-content>
 </ion-view>

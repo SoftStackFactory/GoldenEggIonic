@@ -1,29 +1,29 @@
 <ion-view title="Poker World" >
     <ion-content padding="true" class="has-header background">
-        <form>
+        <form name="manageTodayForm" ng-submit="updatingView()"> 
             <!-- Title for Tournaments below. Start of tournament management section -->
         <div class="list card card-info">
                 <div class="item item-divider">
-                    <h3 class="title white-text">Tournaments:</h3>
+                    <h1 class="title white-text">Tournaments:</h1>
                 </div>
             <div class="item item-body">
             <!-- tournaments that are displayed on view today below -->
-                <h4 class="input-label white-text">Displayed</h4>
+                <h2 class="input-label white-text">Happening Today</h2>
                     
-                <div ng-init="tournamentsActive = [{name:'Friday Night Lights'}]">
+                <div>
                     <ul class="list">
-                        <li class="item"  ng-repeat="tournamentActive in tournamentsActive">    
-                            <ion-checkbox class="white-text">{{tournamentActive.name}}</ion-checkbox>
+                        <li class="item"  ng-repeat="tournament in manageTournaments | filter: tournament.displayed = true">    
+                            <ion-checkbox class="white-text" ng-model="tournament.displayed">{{tournament.name}}</ion-checkbox>
                         </li>
                     </ul>    
                 </div> 
                 <!-- tournaments that are  not displayed on view today below -->
-                <h4 class="input-label white-text">Not Displayed</h4>
+                <h2 class="input-label white-text">Templates Avaliable</h2>
             
-                <div ng-init="tournaments = [{name:'Crazy Monday'},{name:'TUES FUN NIGHT'},{name:'CRAZY THURSDAY'}]">
+                <div>
                     <ul class="list">
-                        <li class="item"  ng-repeat="tournament in tournaments">    
-                            <ion-checkbox  class="white-text">{{tournament.name}}</ion-checkbox>
+                        <li class="item"  ng-repeat="tournament in manageTournaments| filter: tournament.displayed = false">    
+                            <ion-checkbox  class="white-text" ng-model="tournament.displayed">{{tournament.name}}</ion-checkbox>
                         </li>
                     </ul>
                 </div>
@@ -32,30 +32,33 @@
             <!-- Title for Cash Games below. Start of Cash game management section -->
         <div class="list card card-info">    
             <div class="item item-divider">
-                <h3 class="title white-text">Cash Games:</h3>
+                <h1 class="title white-text">Cash Games:</h1>
             </div>
             <!-- Cash game templates that are displayed below -->
             <div class="item item-body">
-                    <h4 class="input-label white-text">Displayed</h4>
+                    <h2 class="input-label white-text">Happening today</h2>
                     <div>
                         <ul class="list">
-                            <li class="item" ng-repeat="cashGame in cashGames | filter:cashGame.displayed | cashGame.displayed=true">
-                                <ion-checkbox class="white-text" ng-model="cashGame.displayed">{{activeCashGame.name}}</ion-checkbox>
+                            <li class="item" ng-repeat="cashGame in manageCashGames | filter: cashGame.displayed=true">
+                                <ion-checkbox class="white-text" ng-model="cashGame.displayed">{{cashGame.name}}</ion-checkbox>
                             </li>
                         </ul>    
                     </div> 
                     <!-- Cash game templates that are not displayed below -->
-                    <h4 class="input-label white-text">Not Displayed</h4>
+                    <h2 class="input-label white-text"> Templates Avaliable</h2>
                     
                     <div>
                         <ul class="list">
-                            <li class="item" ng-repeat="cashGame in cashGames | filter:cashGame.displayed | cashGame.displayed=false">
-                                <ion-checkbox class="white-text">{{cashGame.name}}</ion-checkbox>
+                            <li class="item" ng-repeat="cashGame in manageCashGames | filter: cashGame.displayed = false">
+                                <ion-checkbox class="white-text" ng-model="cashGame.displayed">{{cashGame.name}}</ion-checkbox>
                             </li>
                         </ul>    
                     </div>
                 </div>  
             </div>
+            <button class="button button-assertive button-block " type="submit">
+                Make Changes
+            </button>    
         </form>
     </ion-content>
 </ion-view>

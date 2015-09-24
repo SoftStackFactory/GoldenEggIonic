@@ -1,4 +1,28 @@
 angular.module('GoldenEggServices', [])
+
+.service('CasinoService',[ function(){
+    var service = this;
+    var casinos = [];
+    var specificCasino = {};
+    
+    service.setAll = function(casinosData){
+        casinos = casinosData;
+    };
+    
+    service.setSpecific = function(specificCasinoData){
+        specificCasino = specificCasinoData;
+    };
+    
+    service.getAll = function(){
+        return casinos;
+    };
+    
+    service.specificCasinoInfo = function(){
+        return specificCasino;
+    };
+    
+}])
+
 .service('GeopointService', function () {
     
     var geopoint = {
@@ -32,9 +56,42 @@ angular.module('GoldenEggServices', [])
     
     service.reverseGeocodeWithCoordinates = function(latitude, longitude) {
         return $http({
-            url: "https://maps.google.com/maps/api/geocode/json?latlng="+latitude+","+longitude+"&sensor=false",
+            url: "https://maps.google.com/maps/api/geocode/json?latlng="+latitude+","+longitude+"&result_type=locality|country&key=AIzaSyDe1iz5XarkeO1vPRUmzonCDbmyvWWS-9U",
             method: "GET",
         });
     };
  
+}])
+
+.service('MenuButtonService', function() {
+    var service = this;
+    
+    service.isHidden = false;
+})
+
+.service('CasinoPlayerInfoService',['$window', function($window) {
+    var service = this;
+
+    var player = $window.localStorage["playerInfo"];
+    
+    if(player === null || player === undefined) {
+        player = {};
+    } else {
+        player = JSON.parse(player);
+    }
+    
+    //Store the information of the user retrieved from the DB in a service for convenience
+    service.setPlayer = function(playerInfo){
+        player = playerInfo;
+        if(player != null && player != undefined) {
+            $window.localStorage["playerInfo"] = JSON.stringify(player);
+        }
+    };
+    
+    //Make get methods as they are needed. 
+    //Information available: country,created,email,firstName,hometown,id,lastName,lastUpdated,username
+    //Optional information (may not be set): location 
+    service.getPlayerName = function() {
+        return player["firstName"] + " " + player["lastName"];
+    };
 }]);

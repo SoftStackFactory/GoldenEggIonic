@@ -6,7 +6,7 @@
                     <div class="col">
                         <label class="item item-input green-item" ng-class="{ 'has-errors' : loginForm.username.$invalid && loginForm.$submitted}">
                             <span class="input-label white-text">Username</span>
-                            <input name="username" type="text" class="white-text" ng-model="username" required>
+                            <input name="username" type="text" class="white-text" ng-model="user.username" required>
                         </label>
                     </div>
                 </div>
@@ -14,13 +14,30 @@
                     <div class="col">
                         <label class="item item-input green-item" ng-class="{ 'has-errors' : loginForm.password.$invalid && loginForm.$submitted}">
                             <span class="input-label white-text">Password</span>
-                            <input name="password" type="password" class="white-text" ng-model="password" required>
+                            <input name="password" type="password" class="white-text" ng-model="user.password" required>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input item-select green-item">
+                            <div class="input-label">
+                                Login as
+                            </div>
+                            <select ng-model="user.requestType" ng-init="user.requestType='User'" class="green-item white-text">
+                              <option ng-select="true">User</option>
+                              <option>Casino</option>
+                            </select>
                         </label>
                     </div>
                 </div>
             </ion-list>
-            <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive">Remember me</ion-checkbox>
-            <button class="button button-assertive button-block">Log in</button>
+            
+            <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive" ng-model ="checkbox.rememberMe">
+                Remember me
+            </ion-checkbox>
+            
+            <button type="submit" class="button button-assertive button-block">Log in</button>
             <button class="button button-assertive button-block" ui-sref="app.signup">Sign up</button>
             <button class="button button-assertive button-block" ng-click="registerCasinoButtonTapped()">Register Casino</button>
         </form>

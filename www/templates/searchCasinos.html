@@ -1,0 +1,19 @@
+<ion-view title="Poker World" >
+    <ion-content padding="true" class="background">
+        
+        <div style="overflow:hidden">
+            <div class="list list-inset ">
+                <label class="item item-input green-item">
+                    <i class="icon ion-search placeholder-icon white-text"></i>
+                    <span class="input-label white-text">Search</span>
+                    <input type="text" ng-model="searchText.name">
+                </label>
+            </div>
+            <ion-list ng-repeat="casino in casinos | filter:searchText">
+                <ion-item class="green-item white-text" ng-click="itemClicked(casino)" ng-class="{'green-item-active':casino == selectedCasino}">
+                    {{casino.name}}
+                </ion-item>
+            </ion-list>
+        </div>
+    </ion-content>
+</ion-view>
