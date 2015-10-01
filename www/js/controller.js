@@ -55,24 +55,59 @@ function($scope, $window, MenuButtonService, CasinoService, $ionicHistory, $stat
    
 }])
 
-.controller('MyCasinoCtrl',['$scope', '$state', '$window', 'CasinoService', 'UserService', 'CasinoPlayerInfoService',
-function($scope, $state, $window, CasinoService, UserService, CasinoPlayerInfoService) {
+.controller('MyCasinoCtrl',['$scope', '$state', '$window', 'CasinoService', 'UserService', 'CasinoPlayerInfoService', 'CasinoSubscriptionService',
+function($scope, $state, $window, CasinoService, UserService, CasinoPlayerInfoService, CasinoSubscriptionService) {
     //TODO: get the real information for the casinos
     $scope.casinos = [];
     
-    if($window.localStorage["isCasino"] === "false") {
-        UserService.userInfo($window.localStorage["token"], $window.localStorage["userID"])
+    $scope.list = {
+        shouldShowDelete: false
+    };
+    
+    $scope.$on('$ionicView.enter', function() {
+        getUserInfo();
+        getMyCasinos();
+    });
+    
+    function getMyCasinos() {
+        UserService.getAllMyCasino($window.localStorage["token"],$window.localStorage["userID"])
         .then(function(response) {
-            CasinoPlayerInfoService.setPlayer(response["data"]);
-            //Emit that the information is received, to update the UI from the side menu ctrl
-            $scope.$emit("SideMenuInfoReceived");
+            $scope.casinos = response.data;
         });
     }
     
+    function getUserInfo() {
+        if($window.localStorage["isCasino"] === "false") {
+            UserService.userInfo($window.localStorage["token"], $window.localStorage["userID"])
+            .then(function(response) {
+                CasinoPlayerInfoService.setPlayer(response["data"]);
+                //Emit that the information is received, to update the UI from the side menu ctrl
+                $scope.$emit("SideMenuInfoReceived");
+            });
+        }
+    }
+    
     $scope.itemClicked = function(item) {
-        //TODO: Set info for the view casino page
-        
+        //set favorited flag to hide the "Add" button
+        item["favorited"] = true;
+        CasinoService.setSpecific(item);
         $state.go("app.viewCasino");
+    };
+    
+    $scope.deleteFavorite = function(item, $index) {
+        var token = $window.localStorage["token"];
+        var userID = $window.localStorage["userID"];
+        
+        CasinoSubscriptionService.findSubscription(token,userID,item["id"])
+        .then(function(response){
+            if(response["status"] === 200) {
+                var firstElement = response.data[0];
+                CasinoSubscriptionService.deleteCasinoSubscription(token,firstElement["id"])
+                .then(function(subscriptionResponse) {
+                    $scope.casinos.splice($index,1);
+                });
+            }
+        });
     };
 }])
 
@@ -266,10 +301,25 @@ function($scope, $ionicHistory, $state, $window, UserService, CasinoUsersService
 
 }])
 
-.controller('RegisterCtrl', ['$scope','$state', 'UserService', '$ionicHistory','$window', 'SSFAlertsService', 'GeopointService', 'ReverseGeocodingService', 'MenuButtonService', 'ServerCasinoService', 'CasinoService',
-function($scope, $state, UserService, $ionicHistory, $window, SSFAlertsService, GeopointService, ReverseGeocodingService, MenuButtonService, ServerCasinoService, CasinoService) {
+.controller('RegisterCtrl', ['$scope','$state', 'UserService', '$ionicHistory','$window', 'SSFAlertsService', 'GeopointService', 'ReverseGeocodingService', 'MenuButtonService', 'ServerCasinoService', 'CasinoService', '$stateParams', 'CasinoPlayerInfoService',
+function($scope, $state, UserService, $ionicHistory, $window, SSFAlertsService, GeopointService, ReverseGeocodingService, MenuButtonService, ServerCasinoService, CasinoService, $stateParams, CasinoPlayerInfoService) {
     $scope.user = {};
     $scope.repeatPassword = {};
+    //To know if this is a new register or an account edit. 
+    $scope.editing = $stateParams.editing;
+    
+    if($scope.editing) {
+        var savedUser = CasinoPlayerInfoService.getPlayer();
+        $scope.user.country = savedUser.country;
+        $scope.user.email = savedUser.email;
+        $scope.user.firstName = savedUser.firstName;
+        $scope.user.hometown = savedUser.hometown;
+        $scope.user.lastName = savedUser.lastName;
+        $scope.user.username = savedUser.username;
+        $scope.submitButtonlabel = "Update";
+    }else {
+        $scope.submitButtonlabel = "Register";
+    }
     
     $scope.$on('$ionicView.enter', function() {
      // Code you want executed every time view is opened
@@ -297,42 +347,66 @@ function($scope, $state, UserService, $ionicHistory, $window, SSFAlertsService, 
     {
         if(form.$valid)
         {   
-            if($scope.user.password !== $scope.repeatPassword.password)
-            {
-                SSFAlertsService.showAlert("Warning","Passwords must match");
-            }else {
-                UserService.create($scope.user)
-                .then(function(response) {
-                    if (response.status === 200) {
-                        loginAfterRegister();
-                        form.$setPristine();
-                    } else {
-                        // status 422 in this case corresonds to the email already registered to the DB
-                        if(response.status === 422)
-                        {
-                            SSFAlertsService.showAlert("Warning","The email is already taken.");
-                        }else if(response.data === null){
-                             //If the data is null, it means there is no internet connection.
-                            SSFAlertsService.showAlert("Error","The connection with the server was unsuccessful, check your internet connection and try again later.");
-                        }else {
-                            SSFAlertsService.showAlert("Error","Something went wrong, try again.");
+            if($scope.editing) {
+                //If password is not undefined, its length is greater than 0, and passwords are different
+                if(($scope.user.password !== $scope.repeatPassword.password) && 
+                (($scope.user.password !== undefined && $scope.user.password.length>0) || 
+                ($scope.repeatPassword.password !== undefined && $scope.repeatPassword.password.length>0))) 
+                {
+                    SSFAlertsService.showAlert("Warning","Passwords must match");
+                }else {
+                
+                    if($scope.user.password !== undefined && $scope.user.password.length == 0) {
+                        delete $scope.user["password"];
+                    }
+                    UserService.update($window.localStorage["token"], $window.localStorage["userID"], $scope.user)
+                    .then(function(response) {
+                        if (response.status === 200) {
+                            form.$setPristine();
+                            SSFAlertsService.showAlert("Good news!","Information updated successfully.");
+                        } else {
+                           failedResponse(response);
                         }
-                    }
-                }, function(response) {
-                    // status 422 in this case corresonds to the email already registered to the DB
-                    if(response.status === 422)
-                    {
-                        SSFAlertsService.showAlert("Warning","The email is already taken.");
-                    }else if(response.data === null){
-                         //If the data is null, it means there is no internet connection.
-                        SSFAlertsService.showAlert("Error","The connection with the server was unsuccessful, check your internet connection and try again later.");
-                    }else {
-                        SSFAlertsService.showAlert("Error","Something went wrong, try again.");
-                    }
-                });
+                    }, function(response) {
+                        failedResponse(response);
+                    });
+                }
             }
+            else {
+                if($scope.user.password !== $scope.repeatPassword.password) 
+                {
+                    SSFAlertsService.showAlert("Warning","Passwords must match");
+                }else {
+                    UserService.create($scope.user)
+                    .then(function(response) {
+                        if (response.status === 200) {
+                            loginAfterRegister();
+                            form.$setPristine();
+                        } else {
+                           failedResponse(response);
+                        }
+                    }, function(response) {
+                        failedResponse(response);
+                    });
+                }
+            }
+        }else {
+            SSFAlertsService.showAlert("Warning","Please enter the information required");
         }
     };
+    
+    function failedResponse(response) {
+        // status 422 in this case corresonds to the email already registered to the DB
+        if(response.status === 422)
+        {
+            SSFAlertsService.showAlert("Warning","The email is already taken.");
+        }else if(response.data === null){
+             //If the data is null, it means there is no internet connection.
+            SSFAlertsService.showAlert("Error","The connection with the server was unsuccessful, check your internet connection and try again later.");
+        }else {
+            SSFAlertsService.showAlert("Error","Something went wrong, try again.");
+        }
+    }
     //Required to get the access token
     function loginAfterRegister()
     {
@@ -476,12 +550,12 @@ function($scope, TournamentService, $window, SSFAlertsService){
     $scope.submitTemplate = function(tournament){
         if(tournament.$valid){
             
-            $scope.tournament.casinoId = $window.localStorage["casinoID"]
+            $scope.tournament.casinoId = $window.localStorage["casinoID"];
             
             TournamentService.create($scope.tournament, $window.localStorage["token"])
             .then(function(response){
                 if(response.status === 200){
-                    tournament.$setPristine
+                    tournament.$setPristine;
                 }else{
                     if(response.status === 401){
                         SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
@@ -489,7 +563,7 @@ function($scope, TournamentService, $window, SSFAlertsService){
                         SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
                     }
                     else{
-                        SSFAlertsService.showAlert("Error", "Something went wrong, try again")
+                        SSFAlertsService.showAlert("Error", "Something went wrong, try again");
                     }
                 }
                 
@@ -502,18 +576,18 @@ function($scope, TournamentService, $window, SSFAlertsService){
                     SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
                 }
                 else{
-                    SSFAlertsService.showAlert("Error", "Something went wrong, try again")
+                    SSFAlertsService.showAlert("Error", "Something went wrong, try again");
                 }
                 resetTemplate();
             });
         }    
-    }
+    };
     
 }])
 
 .controller('CashGameTemplateCtrl', ['$scope', 'CashGameService', '$window', 'SSFAlertsService',
 function($scope, TournamentService, $window, SSFAlertsService){
-    $scope.cashGame = {}
+    $scope.cashGame = {};
     
     function resetTemplate(){
         $scope.cashGame.name = "";
@@ -541,7 +615,7 @@ function($scope, TournamentService, $window, SSFAlertsService){
                         SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
                     }
                     else{
-                        SSFAlertsService.showAlert("Error", "Something went wrong, try again")
+                        SSFAlertsService.showAlert("Error", "Something went wrong, try again");
                     }
                 }
                 
@@ -554,20 +628,20 @@ function($scope, TournamentService, $window, SSFAlertsService){
                     SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
                 }
                 else{
-                    SSFAlertsService.showAlert("Error", "Something went wrong, try again")
+                    SSFAlertsService.showAlert("Error", "Something went wrong, try again");
                 }
                 resetTemplate();
             });
         }    
-    }
+    };
     
 }])
 
 
 .controller('ViewCasinoCtrl', ['$scope', '$window', 'CasinoService', '$ionicSideMenuDelegate', 'uiGmapIsReady', 
-            'TournamentService', 'TodayTournamentService', 'CashGameService', 'TodayCashGamesService', 'SSFAlertsService',
+            'TournamentService', 'TodayTournamentService', 'CashGameService', 'TodayCashGamesService', 'SSFAlertsService', 'CasinoSubscriptionService', '$q', 'BlindService',
 function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady, 
-            TournamentService, TodayTournamentService, CashGameService, TodayCashGamesService, SSFAlertsService) {
+            TournamentService, TodayTournamentService, CashGameService, TodayCashGamesService, SSFAlertsService, CasinoSubscriptionService, $q, BlindService) {
     //Disable opening the sidemenu with a swipe, due to google maps not being able to scroll
     $ionicSideMenuDelegate.canDragContent(false);
     $scope.casino = {
@@ -577,7 +651,12 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
         }
     };
     
+    //there is a few things that needs to be changed to the backend relating to the tournament information. 
+    // We need to keep timers that are stable and will continue the countdown once they're recieved but....
+    // wouldn't take too much time to it on the client-side?
+    
     $scope.casinoInfo = {};
+    $scope.blindInfo = [];
     $scope.tournamentInfo = [];
     $scope.currentTournaments = [];
     $scope.cashGameInfo = [];
@@ -587,11 +666,14 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
             infoUsed: [ ],
             infoStored: [ ]
           }, {
+            serviceUsed: BlindService, 
+            infoUsed: [ ],
+            infoStored: [ ]
+          },{
             serviceUsed: CashGameService, 
             infoUsed: [ ],
             infoStored: [ ] 
           }];
-          
     $scope.currentHttpCalls = [
            {
             serviceUsed: TodayTournamentService, 
@@ -600,16 +682,18 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
             serviceUsed: TodayCashGamesService, 
             infoStored: [ ]
           }];
-    
-    $scope.isCasino = $window.localStorage["isCasino"] === "true";
-    $scope.casinoInfo = CasinoService.specificCasinoInfo();
+    $scope.pos = 0;
     
     $scope.buttons = {
         activeButton: 0
     };
     
     resetButton();
-    getInformation();
+    var fetchingInfo = getInformation($scope.currentHttpCalls[$scope.pos]);
+    
+    fetchingInfo.then(function(success){
+        return getInformation($scope.currentHttpCalls[$scope.pos]);
+    });
     
     $scope.infoButtonClicked = function(value){
          if($scope.buttons.activeButton!= value)
@@ -623,22 +707,24 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
     
     //getting casino information for the casino view page
     
-    //need to first set up the managetodayctrl before i mess with this
-    function getInformation(){ //getting cashGame and Tournament information
-        $scope.currentHttpCalls.forEach(function(call, index){
+    function getInformation(currentModel){//getting cashGame and Tournament information
+        var nextService = $q.defer();
+    
+        $scope.isCasino = $window.localStorage["isCasino"] === "true";
+        $scope.casinoInfo = CasinoService.specificCasinoInfo();
               
-              call.serviceUsed.getAll($window.localStorage["casinoID"], $window.localStorage["token"])
+              currentModel.serviceUsed.getAll($window.localStorage["casinoID"], $window.localStorage["token"])
                 .then(function(response){
                 if(response.status === 200){
-                    console.log(response);
-                    call.infoStored = response.data;
-                    
-                    if(index === 0){
-                        $scope.currentTournaments = call.infoStored;
-                    } else if (index === 1){
-                        $scope.currentCashGames = call.infoStored;
+                    if($scope.pos === 0){
+                        $scope.currentTournaments = response.data;
+                        $scope.pos = 1;
+                    } else if ($scope.pos === 1){
+                        $scope.currentCashGames = response.data;
                         setInformation();
                     }
+                    
+                    nextService.resolve(true);
                     
                 }else{
                     if(response.status === 401){
@@ -660,58 +746,65 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
                         SSFAlertsService.showAlert("Error", "Something went wrong, try again");
                     }
             });
-          });
+            
+            return nextService.promise;
         
     }
     
     function setInformation(){
+        
             $scope.settingInfoCalls.forEach(function(call, index){
-                
-                if(index === 0){
-                    $scope.settingInfoCalls.infoUsed = $scope.currentTournaments;
-                    
-                } else if (index === 1){
-                    $scope.settingInfoCalls.infoUsed = $scope.currentCashGames;
-                    
+                if(index === 0 || index === 1){
+                    call.infoUsed = angular.copy($scope.currentTournaments);
+                } else if (index === 2){
+                    call.infoUsed = angular.copy($scope.currentCashGames);
                 }
-              
                 call.infoUsed.forEach(function(individualModel){
-                  call.serviceUsed.getSpecific(call.infoUsed, $window.localStorage["token"])
-                    .then(function(response){
-                    if(response.status === 200){
-                        call.infoStored = response.data;
-                        
-                        if(index === 0){
-                            $scope.tournamentInfo = call.infoStored;
-                        } else if (index === 1){
-                            $scope.cashGameInfo = call.infoStored;
-                        }
-                        
-                    }else{
-                        if(response.status === 401){
-                            SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
-                        } else if (response.status === null){
-                            SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
-                        }
-                        else{
-                            SSFAlertsService.showAlert("Error", "Something went wrong, try again");
-                        }
+                    var objID; // the object ID I need
+                    if(index === 0 || index === 1){
+                        objID = individualModel.tournamentId;
+                    } else if (index === 1){
+                        objID = individualModel.cashGameId;
                     }
-                }, function(response){
-                    if(response.status === 401){
-                            SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
-                        } else if (response.status === null){
-                            SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
-                        }
-                        else{
-                            SSFAlertsService.showAlert("Error", "Something went wrong, try again");
-                        }
-                });
+
+                    if(call.infoUsed.length != 0){
+                        call.serviceUsed.getSpecific(objID, $window.localStorage["token"])
+                            .then(function(response){
+                            if(response.status === 200){
+                                call.infoStored = response.data;
+                                console.log(call.infoStored);
+                                if(index === 0){
+                                    $scope.tournamentInfo = call.infoStored;
+                                } else if (index === 1){
+                                    $scope.blindInfo = call.infoStored;
+                                }
+                                else if (index === 2){
+                                    $scope.cashGameInfo = call.infoStored;
+                                }
+                            }else{
+                                if(response.status === 401){
+                                    SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
+                                } else if (response.status === null){
+                                    SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
+                                }
+                                else{
+                                    SSFAlertsService.showAlert("Error", "Something went wrong, try again");
+                                }
+                            }
+                        }, function(response){
+                            if(response.status === 401){
+                                    SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
+                                } else if (response.status === null){
+                                    SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
+                                }
+                                else{
+                                    SSFAlertsService.showAlert("Error", "Something went wrong, try again");
+                                }
+                }); }
             });        
         });
         
     }
-    
     
      //Google maps parameters methods
     $scope.map = { 
@@ -739,7 +832,18 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
     $scope.closeClick = function() {
         $scope.windowOptions.visible = false;
     };
-
+    
+    $scope.favoritesButtonTapped = function() {
+        var playerID = $window.localStorage["userID"];
+        var casinoID = $scope.casinoInfo["id"];
+        var subscriptionInfo = {"casinoId":casinoID, "playerId": playerID};
+        CasinoSubscriptionService.create(subscriptionInfo, $window.localStorage["token"])
+        .then(function(response) {
+            console.log(response);
+            SSFAlertsService.showAlert("Well done!","This casino is now added to your casinos list.");
+        });
+    };
+    
 }])
 
 .controller('ManageTodayCtrl', [ '$scope', '$window', '$state', '$q', 'TournamentService', 'CashGameService', 'SSFAlertsService', 'TodayTournamentService', 'TodayCashGamesService', '$ionicHistory',
@@ -748,20 +852,7 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
     $scope.currentTournaments = [];    
     $scope.manageCashGames = [];
     $scope.currentCashGames = [];
-    $scope.httpCalls = [
-          { 
-            serviceUsed: TodayTournamentService,
-            infoStored: [ ]
-          }, {
-            serviceUsed: TodayCashGamesService,
-            infoStored: [ ]
-          }, {
-            serviceUsed: TournamentService, 
-            infoStored: [ ]
-          }, {
-            serviceUsed: CashGameService,
-            infoStored: [ ]
-          }];
+    $scope.httpCalls = [TodayTournamentService, TodayCashGamesService, TournamentService, CashGameService];
     $scope.todayModels = [{ 
             serviceUsed: TodayTournamentService,
             infoStored: [ ]
@@ -769,87 +860,107 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
             serviceUsed: TodayCashGamesService, 
             infoStored: [ ]
           }];
+    $scope.n = 0;
     
-    getInfo();
+    
+    var promise = getInfo($scope.httpCalls[$scope.n]); //this assigns the getInfo function to my promise value
+    
+    promise.then(function(success){ return getInfo($scope.httpCalls[$scope.n]); })
+    .then(function(success){ return getInfo($scope.httpCalls[$scope.n]); })
+    .then(function(success){ return getInfo($scope.httpCalls[$scope.n]); } ,function(failure){
+        //dont know if i need to fill info in here?
+    });
 
     $scope.updatingView = function(){
+        var deletingModels = deleteCurrentInfo();
+        var updatingModels = settingForPush($scope.todayModels);
         
-        deleteCurrentInfo(); 
-        
-        $scope.todayModels.forEach(function(currentModel, index){
+        deletingModels.then(function(success){
             
-            if(index === 0){
-                $scope.manageTournaments.forEach(function(tournament){
-                    $scope.update = {};
-                    
-                    if(tournament.displayed === true){
-                        $scope.update.tournamentId = angular.copy(tournament.id);
-                        $scope.update.casinoId = angular.copy(tournament.casinoId);
-                        currentModel.infoStored.push($scope.update);
-                    }
-                });
-            } else if (index === 1){
-                $scope.manageCashGames.forEach(function(cashGame){
-                    $scope.update = {};
-                    
-                    if(cashGame.displayed === true){
-                        $scope.update.cashGameId = angular.copy(cashGame.id);
-                        $scope.update.casinoId = angular.copy(cashGame.casinoId);
-                        currentModel.infoStored.push($scope.update);
-                    }
-                });
-            }
+            $scope.n = 0;
             
-            if(currentModel.infoStored.length != 0){ 
+            updatingModels.then(function(success){ 
+                $ionicHistory.nextViewOptions({
+                    disableBack: true
+                });
+                $state.go('app.viewCasino');
+                SSFAlertsService.showAlert("Update", "You have just updated your Casinos page!");
+            });
                 
-                currentModel.infoStored.forEach(function(model, counter){
-                   console.log(model);
-                   currentModel.serviceUsed.create(model, $window.localStorage["token"])
-                    .then(function(response){
-                       if(response.status === 200){
-                           if(index === 1){
-                               $ionicHistory.nextViewOptions({
-                                  disableBack: true
-                                });
-                               $state.go('app.viewCasino');
-                               SSFAlertsService.showAlert("Update", "You have just updated your Casinos page!");
+        }, function(error) {
+            console.log("error");
+        });
+    }; 
+    
+    function settingForPush (todayModels){ //trying to control the flow of the post to the backend 
+                                           // i believe that how fast i go to a different state is faster than a backend post
+            var setPushes = $q.defer();                      
+                
+            todayModels.forEach(function(todayModel, index){
+                if(index === 0 && $scope.manageTournaments.length != 0){
+                    $scope.manageTournaments.forEach(function(tournament){
+                        $scope.update = {};
+                        
+                        if(tournament.displayed === true){
+                            $scope.update.tournamentId = angular.copy(tournament.id);
+                            $scope.update.casinoId = angular.copy(tournament.casinoId);
+                            todayModel.infoStored.push($scope.update);
+                        }
+                    });
+                } else if (index === 1 && $scope.manageCashGames.length != 0){
+                    $scope.manageCashGames.forEach(function(cashGame){
+                        $scope.update = {};
+                        
+                        if(cashGame.displayed === true){
+                            $scope.update.cashGameId = angular.copy(cashGame.id);
+                            $scope.update.casinoId = angular.copy(cashGame.casinoId);
+                            todayModel.infoStored.push($scope.update);
+                        }
+                    });
+                }
+                
+                if(todayModel.infoStored.length != 0){
+                    todayModel.infoStored.forEach(function(model, counter){
+                       console.log(model);
+                       // iterating through all of the models and sending them to back end creating new instances of that model.
+                       todayModel.serviceUsed.create(model, $window.localStorage["token"]) 
+                        .then(function(response){
+                           if(response.status === 200){
+                                if (index === 1 && todayModel.infoStored.length === counter) {
+                                   setPushes.resolve(true);
+                                 }
+                               
+                           } else {
+                               if(response.status === 401){
+                                    SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
+                                }else if (response.status === null){
+                                    SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
+                                }else{
+                                    SSFAlertsService.showAlert("Error", "Something went wrong, try again. Location: Inside the success loop.");
+                                }
                            }
-                       } else {
+                           
+                       }, function(response){
                            if(response.status === 401){
                                 SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
                             }else if (response.status === null){
                                 SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
                             }else{
-                                SSFAlertsService.showAlert("Error", "Something went wrong, try again. Location: Inside the success loop.");
+                                SSFAlertsService.showAlert("Error", "Something went wrong, try again. Location: Inside failure loop.");
                             }
-                       }
+                       }); 
                        
-                   }, function(response){
-                       if(response.status === 401){
-                            SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
-                        }else if (response.status === null){
-                            SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
-                        }else{
-                            SSFAlertsService.showAlert("Error", "Something went wrong, try again. Location: Inside failure loop.");
-                        }
-                   }); 
-                   
-                }); 
-                
-                } else if (index === 1 && currentModel.infoStored.length === 0){
-                        $ionicHistory.nextViewOptions({
-                          disableBack: true
-                        });
-                        $state.go('app.viewCasino');
-                        SSFAlertsService.showAlert("Update", "You have just updated your Tournaments on your Casino Page!");
+                    }); 
+                } else if(index === 1){
+                    setPushes.resolve(true);
                 }
-                
-        });
-    }; //attempted to fix the issues here.  
+            });
+            return setPushes.promise;
+        }
     
     function deleteCurrentInfo (){//deleting the current information displayed in the today models
-     
-        var defer = $q.defer();
+        
+        var controlFlow = $q.defer();
            
         $scope.todayModels.forEach(function(call, index){
             
@@ -861,14 +972,15 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
             
             if(call.infoStored.length != 0){
             
-                call.infoStored.forEach(function(deleteModels){
+                call.infoStored.forEach(function(deleteModels, counter){
+                    console.log(deleteModels);
                     call.serviceUsed.terminate(deleteModels.id, $window.localStorage["token"])
                     .then(function(response){
+                        console.log(response);
                         if(response.status === 204){
                             console.log("deleted a model");
-                            
-                            if(index === 1){
-                                defer.resolve(true);
+                            if(index === 1 && call.infoStored.length === counter){
+                                controlFlow.resolve(true);
                             }
                             
                         }  else if(response.status === 401){
@@ -878,72 +990,73 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
                         } else{
                             SSFAlertsService.showAlert("Error", "Something went wrong, try again");
                         }
-                        
-                    
                     }, function(response){
-                        if(response.status === 401){
-                        SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
-                    } else if (response.status === null){
-                        SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
-                    } else{
-                        SSFAlertsService.showAlert("Error", "Something went wrong, try again");
-                    }
+                            if(response.status === 401){
+                                SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
+                            } else if (response.status === null){
+                                SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
+                            } else{
+                                SSFAlertsService.showAlert("Error", "Something went wrong, try again");
+                        }
                     });
                 });
-            
-           /* call.serviceUsed.terminate(call.deleteModels.Id, $window.localStorage["token"])
-                .then(function(response){
-                    if(response.status === 200){}
-                
-                }, function(response){
-                    
-                }) */ // this is the original terminating call for deleting today models
-            } else {   
-                defer.resolve(true);   
+            } else if (index === 1) {
+                controlFlow.resolve(true);
             }
         });
-         return defer.promise;
+        
+        return controlFlow.promise;
     }
     
-    function getInfo(){
-          $scope.httpCalls.forEach(function(call, index){
-              
-              call.serviceUsed.getAll($window.localStorage["casinoID"], $window.localStorage["token"])
-                .then(function(response){
-                if(response.status === 200){
-                    call.infoStored = response.data;
-                    if(index === 0){
-                        $scope.currentTournaments = call.infoStored;
-                    } else if(index === 1){
-                        $scope.currentCashGames = call.infoStored;
-                    } else if(index === 2){
-                        $scope.manageTournaments = call.infoStored;
-                    }else if (index === 3){
-                        $scope.manageCashGames = call.infoStored;
-                        setInfo();
+    function getInfo(serviceUsed){
+        var nextService = $q.defer();
+        
+        serviceUsed.getAll($window.localStorage["casinoID"], $window.localStorage["token"])
+                    .then(function(response){
+                    if(response.status === 200){
+                        console.log(response.data);
+                        nextService.resolve(true);
+                        if($scope.n === 0){
+                            $scope.currentTournaments = response.data;
+                            $scope.n = 1;
+                            
+                        } else if($scope.n === 1){
+                            $scope.currentCashGames = response.data;
+                            $scope.n = 2;
+                            
+                        } else if($scope.n === 2){
+                            $scope.manageTournaments = response.data;
+                            $scope.n = 3;
+                            
+                        }else if ($scope.n === 3){
+                            $scope.manageCashGames = response.data;
+                            $scope.n = 4;
+                            setInfo();
+                        }
+                        
+                    }else{
+                        if(response.status === 401){
+                            SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
+                        } else if (response.status === null){
+                            SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
+                        }
+                        else{
+                            SSFAlertsService.showAlert("Error", "Something went wrong, try again");
+                        }
+                        nextService.reject(false);
                     }
-                    
-                }else{
+                }, function(response){
                     if(response.status === 401){
-                        SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
-                    } else if (response.status === null){
-                        SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
-                    }
-                    else{
-                        SSFAlertsService.showAlert("Error", "Something went wrong, try again");
-                    }
-                }
-            }, function(response){
-                if(response.status === 401){
-                        SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
-                    } else if (response.status === null){
-                        SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
-                    }
-                    else{
-                        SSFAlertsService.showAlert("Error", "Something went wrong, try again");
-                    }
-            });
-          });
+                            SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
+                        } else if (response.status === null){
+                            SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
+                        }
+                        else{
+                            SSFAlertsService.showAlert("Error", "Something went wrong, try again");
+                        }
+                    });
+                    
+                return nextService.promise;
     }
     
     function setInfo() { //function that sets the checks and necessary properties in place
@@ -953,7 +1066,7 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
             
             //make sure to change the tournament.name to tournament.tournamentId
                 $scope.currentTournaments.forEach(function(currentTournament){
-                    if(tournament.id === currentTournament.id){ 
+                    if(tournament.id === currentTournament.tournamentId){ 
                         tournament.displayed = true;
                     }
                 });
@@ -963,7 +1076,7 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
             cashGame.displayed = false;
             
             $scope.currentCashGames.forEach(function(currentCashGame){
-                if(cashGame.id === currentCashGame.id){ 
+                if(cashGame.id === currentCashGame.cashGameId){ 
                     cashGame.displayed = true;
                 }
             });
@@ -981,11 +1094,11 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
     
 }])
 
-.controller('ManageUsersCtrl',['$scope', 'SSFAlertsService', function($scope, SSFAlertsService) {
+.controller('ManageUsersCtrl',['$scope', '$window', 'SSFAlertsService', 'CasinoUsersService',
+function($scope, $window, SSFAlertsService, CasinoUsersService) {
     $scope.selectedUser;
     
-    $scope.users = [{"name":"Harold Gottschalk", "role":"Admin"}, {"name":"Ryn Corbiel", "role":"Admin"},
-    {"name":"Alex Baker", "role":"Secondary"}, {"name":"Andres Aguilar", "role":"Secondary"}];
+    $scope.users = [];
     
     $scope.buttons = {
         activeButton:0
@@ -994,6 +1107,23 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
     $scope.managedUser = resetUser();
     
     $scope.newUser = resetUser();
+    
+    getCasinoUsers();
+    
+    function getCasinoUsers() {
+        CasinoUsersService.getAll($window.localStorage["casinoID"],$window.localStorage["token"])
+        .then(function(response) {
+            console.log(response);
+            if(response.status == 200) {
+                $scope.users = response.data;
+            }else {
+                SSFAlertsService("Sorry!","We could not fetch the information at this moment. Try again later.");
+            }
+        }, function(response) {
+            SSFAlertsService("Sorry!","We could not fetch the information at this moment. Try again later.");
+        });
+    }
+    
     
     $scope.toolbarButtonClicked = function(value) {
         if($scope.buttons.activeButton!= value)
@@ -1006,32 +1136,106 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
     
     $scope.selectUser = function(user) {
         $scope.selectedUser = user; 
-        $scope.managedUser.name = $scope.selectedUser.name;
+        $scope.managedUser.username = $scope.selectedUser.username;
+        $scope.managedUser.firstName = $scope.selectedUser.firstName;
+        $scope.managedUser.lastName = $scope.selectedUser.lastName;
         $scope.managedUser.email = $scope.selectedUser.email;
-        $scope.managedUser.mainUser = ($scope.selectedUser.role == "Admin") ? true : false;
+        $scope.managedUser.role = ($scope.selectedUser.role == "Admin") ? true : false;
     };
     
     function resetUser() {
         var cleanUser = {
-            name: "",
+            firstName: "",
+            lastName: "",
             email:"",
-            mainUser:false
+            role: false
         };
         return cleanUser;
     }
     
     function deleteProcess() {
         if($scope.selectedUser) {
-            SSFAlertsService.showConfirm("Warning", "Are you sure you want to delete "+$scope.selectedUser.name + " ?")
+            SSFAlertsService.showConfirm("Warning", "Are you sure you want to delete "+$scope.selectedUser.firstName + " " + $scope.selectedUser.lastName + " ?")
             .then(function(response) {
                 if (response == true) {
-                    var index = $scope.users.indexOf($scope.selectedUser);
-                    $scope.users.splice(index, 1);
-                    $scope.managedUser = resetUser();
+                    CasinoUsersService.delete($scope.selectedUser.id, $window.localStorage["token"])
+                    .then(function(response) {
+                        console.log(response);
+                        if(response.status === 200 || response.status === 204) {
+                            var index = $scope.users.indexOf($scope.selectedUser);
+                            $scope.users.splice(index, 1);
+                            $scope.managedUser = resetUser();
+                            $scope.selectedUser = null;
+                        }else {
+                            SSFAlertsService.showAlert("Error", "We could not delete the user at this moment. Try again later.");
+                        }
+                    }, function() {
+                        SSFAlertsService.showAlert("Error", "We could not delete the user at this moment. Try again later.");
+                    });
                 }
             });
         }else {
             SSFAlertsService.showAlert("Error", "Please select a user first");
         }
     }
+    
+    $scope.submitNewCasinoUserForm = function(form) {
+        if(form.$valid) {
+            $scope.newUser["casinoId"] = $window.localStorage["casinoID"];
+            $scope.newUser["password"] = $scope.newUser.username;
+            if($scope.newUser.role) {
+                $scope.newUser.role = "Admin";
+            }else {
+                $scope.newUser.role = "Secondary";
+            }
+            CasinoUsersService.create($scope.newUser)
+            .then(function(response) {
+                console.log(response);
+                if(response.status === 200)
+                {
+                    $scope.buttons.activeButton = 0;
+                    SSFAlertsService.showAlert("Good news!", "User registered correctly.");
+                    $scope.users.push(response.data);
+                    form.$setPristine;
+                }else {
+                    SSFAlertsService.showAlert("Error", "We could not create the user at this moment. Try again later.");
+                }
+            }, function(response) {
+                SSFAlertsService.showAlert("Error", "We could not create the user at this moment. Try again later.");
+            });
+        }else {
+            SSFAlertsService.showAlert("Warning", "Please supply the information required.");
+        }
+    };
+    
+    $scope.submitEditCasinoUserForm = function(form) {
+        if(form.$valid) {
+            if($scope.managedUser.role) {
+                $scope.managedUser.role = "Admin";
+            }else {
+                $scope.managedUser.role = "Secondary";
+            }
+            console.log($scope.managedUser);
+            CasinoUsersService.update($scope.selectedUser.id, $scope.managedUser, $window.localStorage["token"])
+            .then(function(response) {
+                console.log(response);
+                if(response.status === 200)
+                {
+                    SSFAlertsService.showAlert("Good news!", "User edited correctly.");
+                    $scope.buttons.activeButton = 0;
+                    var index = $scope.users.indexOf($scope.selectedUser);
+                    $scope.users[index] = response.data;
+                    $scope.managedUser = resetUser();
+                    $scope.selectedUser = null;
+                    form.$setPristine;
+                }else {
+                    SSFAlertsService.showAlert("Error", "We could not edit the user at this moment. Try again later.");
+                }
+            }, function(response) {
+                SSFAlertsService.showAlert("Error", "We could not edit the user at this moment. Try again later.");
+            });
+        }else {
+            SSFAlertsService.showAlert("Warning", "Please supply the information required.");
+        }
+    };
 }]);

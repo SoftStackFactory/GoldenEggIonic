@@ -3,9 +3,8 @@
 <ion-view title="Poker World" >
         <ion-nav-buttons side="right">
             <!-- subscription icon hides if user isCasino-->
-            <button class="button icon ion-plus-circled button-clear" ng-hide="isCasino"></button>
+            <button class="button icon ion-plus-circled button-clear" ng-hide="isCasino || casinoInfo.favorited" ng-click="favoritesButtonTapped()"></button>
         </ion-nav-buttons>  
-        <ion-nav-view></ion-nav-view>
     <!-- main body of page content -->
     <ion-content padding="true"  class="has-header background">
             <div class="row">
@@ -24,7 +23,7 @@
                         <!-- Start of the Tournament Information Card -->
                         <div class="list card card-info">
                             <div class="item item-divider">
-                                <h3 class="white-text"> Registeration Info</h3>
+                                <h3 class="white-text"> Registeration Info for {{tournamentInfo.name}}</h3>
                             </div>
                             
                             <div class="item item-body">
@@ -38,7 +37,7 @@
                                     </div>        
                                     <div class="col">    
                                         <h3 class="white-text">Entry Cost</h3>
-                                        <p class="white-text">Cost of Entry</p>
+                                        <p class="white-text">{{tournamentInfo.entryCost}}</p>
                                     </div>  
                                 </div>
                                 <!-- 
@@ -47,11 +46,11 @@
                                 <div class="row">    
                                     <div class="col">    
                                         <h3 class="white-text"># of Reloads</h3>
-                                        <p class="white-text"># of Reloads</p>
+                                        <p class="white-text">{{tournamentInfo.numReloads}}</p>
                                     </div>  
                                     <div class="col">    
                                         <h3 class="white-text">Reload Cost</h3>
-                                        <p class="white-text">Cost of Reload</p>
+                                        <p class="white-text">{{tournamentInfo.reloadCost}}</p>
                                     </div>   
                                 </div>
                                 <!-- 
@@ -60,11 +59,11 @@
                                 <div class="row">    
                                     <div class="col">    
                                         <h3 class="white-text">Entry Stack</h3></h3>
-                                        <p class="white-text">Size of Entry Stack</p>
+                                        <p class="white-text">{{tournamentInfo.startStack}}<p>
                                     </div>  
                                     <div class="col">    
                                         <h3 class="white-text">Reload Stack</h3>
-                                        <p class="white-text">Size of Reload Stack</p>
+                                        <p class="white-text">{{tournamentInfo.reloadStack}}</p>
                                     </div>   
                                 </div>
                             </div>
@@ -92,15 +91,15 @@
                             -->
                                 <div class="row">
                                     <div class="col">
-                                        <h3 class="white-text">Blinds:</h3>
+                                        <h3 class="white-text">Blinds: {{tournamentInfo.name}}</h3>
                                     </div>
                                 </div>    
                                 <div class="row">    
-                                        <div class="col">    
-                                            <p class="white-text">Small: 50</p>
+                                        <div class="col" ng-repeat="blind in blindInfo">    
+                                            <p class="white-text">{{blind.small}}</p>
                                         </div>  
-                                        <div class="col">    
-                                            <p class="white-text">Big: 100</p>
+                                        <div class="col" ng-repeat="blind in blindInfo">    
+                                            <p class="white-text">{{blind.big}}</p>
                                         </div>
                                 </div>
                             </div>
@@ -116,7 +115,7 @@
                         <!-- Start of the Cash Game Information Card -->
                         <div class="list card card-info">
                             <div class="item item-divider">
-                                <h3 class="white-text">Low Rider {{cashGame.name}}</h3>
+                                <h3 class="white-text">Low Rider {{cashGameInfo.name}}</h3>
                             </div>
                             <div class="item item-body">
                                 <!-- 
@@ -125,7 +124,7 @@
                                 <div class="row">
                                     <div class="col">
                                         <h3 class="white-text">Type of Poker:</h3>
-                                        <p class="white-text">{{cashGame.style}}</p> 
+                                        <p class="white-text">{{cashGameInfo.style}}</p> 
                                     </div>        
                                 </div>
                                 <!-- 
@@ -138,10 +137,10 @@
                                 </div>    
                                 <div class="row">
                                     <div class="col"> 
-                                       <p class="white-text">Min:{{cashGame.min}}</p>
+                                       <p class="white-text">Min:{{cashGameInfo.min}}</p>
                                     </div>  
                                     <div class="col">    
-                                        <p class="white-text">Max:{{cashGame.max}}</p>
+                                        <p class="white-text">Max:{{cashGameInfo.max}}</p>
                                     </div>  
                                 </div>
                                 <!-- 
@@ -154,10 +153,10 @@
                                 </div>
                                 <div class="row">    
                                     <div class="col">    
-                                        <p class="white-text">Small:{{cashGame.smallBlind}}</p>
+                                        <p class="white-text">Small:{{cashGameInfo.smallBlind}}</p>
                                     </div>  
                                     <div class="col">    
-                                        <p class="white-text">Big:{{cashGame.bigBlind}}</p>
+                                        <p class="white-text">Big:{{cashGameInfo.bigBlind}}</p>
                                     </div>   
                                 </div>
                             </div>
@@ -172,11 +171,11 @@
                         <div class="list card card-info">
                             <div class="item item-avatar">
                                 <!-- <img src="casino pic"> -->
-                                <h2 class="white-text">{{casino.name}}</h2>
+                                <h2 class="white-text">{{casinoInfo.name}}</h2>
                                 <p class="white-text">November 05, 1955 (date)</p>
                             </div>
                             <div class="item item-body">
-                                <p class="white-text">Casino Posts info here blah blah {{casino.post}}</p>
+                                <p class="white-text">Casino Posts info here blah blah {{casinoInfo.post}}</p>
                             </div>  
                         </div>    
                     </div>
@@ -190,7 +189,7 @@
                                 <ui-gmap-google-map control='map.control' center='map.center' zoom='map.zoom' ng-cloak>
                                     <ui-gmap-marker coords="marker.coords" idkey="marker.id" click="markerClick()">
                                         <ui-gmap-window options="windowOptions" closeClick="closeClick()">
-                                            <div>{{casino.name}}</div>
+                                            <div>{{casinoInfo.name}}</div>
                                         </ui-gmap-window>
                                     </ui-gmap-marker>
                                 </ui-gmap-google-map>

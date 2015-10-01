@@ -10,7 +10,11 @@
     background-color:transparent;
 }
 
-.green-item  {
+.has-errors {
+  border: 1px solid red;
+}
+
+.green-item, #myCasinoList .item-content, input:disabled  {
     background-color: #009924 !important;
     border-width:0px;
 }

@@ -88,9 +88,12 @@ angular.module('GoldenEggServices', [])
         }
     };
     
-    //Make get methods as they are needed. 
     //Information available: country,created,email,firstName,hometown,id,lastName,lastUpdated,username
     //Optional information (may not be set): location 
+    service.getPlayer = function() {
+        return player;
+    }; 
+    
     service.getPlayerName = function() {
         return player["firstName"] + " " + player["lastName"];
     };

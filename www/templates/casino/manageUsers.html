@@ -4,7 +4,7 @@
         <div style="overflow:hidden">
             <ion-list ng-repeat="user in users">
                 <ion-item class="green-item white-text" ng-click="selectUser(user)" ng-class="{'green-item-active':user == selectedUser}">
-                    {{user.name}}({{user.role}})
+                    {{user.firstName}} {{user.lastName}}({{user.role}})
                 </ion-item>
             </ion-list>
         </div>
@@ -21,46 +21,81 @@
         </div>
         <!-- Add user section -->
         <div ng-show="buttons.activeButton==1">
-            <div class="row">
-                <div class="col">
-                    <label class="item item-input green-item">
-                        <span class="input-label white-text">Name of user</span>
-                        <input type="text" class="white-text" ng-model="newUser.name">
-                    </label>
+            <form name="newCasinoUserForm" novalidate ng-submit="submitNewCasinoUserForm(newCasinoUserForm)">
+                <div class="row">
+                    <div class="col" ng-class="{ 'has-errors' : newCasinoUserForm.username.$invalid && newCasinoUserForm.$submitted}">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">Username</span>
+                            <input name="username" type="text" class="white-text" ng-model="newUser.username" required>
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <label class="item item-input green-item">
-                        <span class="input-label white-text">User's email</span>
-                        <input type="text" class="white-text" ng-model="newUser.email">
-                    </label>
+                <div class="row">
+                    <div class="col" ng-class="{ 'has-errors' : newCasinoUserForm.firstName.$invalid && newCasinoUserForm.$submitted}">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">First Name</span>
+                            <input name="firstName" type="text" class="white-text" ng-model="newUser.firstName" required>
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive" ng-model="newUser.mainUser">Main User?</ion-checkbox>
-            <button class="button button-assertive button-block">Submit</button>
+                <div class="row">
+                    <div class="col" ng-class="{ 'has-errors' : newCasinoUserForm.lastName.$invalid && newCasinoUserForm.$submitted}">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">Last Name</span>
+                            <input name="lastName" type="text" class="white-text" ng-model="newUser.lastName" required>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" ng-class="{ 'has-errors' : newCasinoUserForm.email.$invalid && newCasinoUserForm.$submitted}">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">User's email</span>
+                            <input name="email" type="email" class="white-text" ng-model="newUser.email" required>
+                        </label>
+                    </div>
+                </div>
+                <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive" ng-model="newUser.role">Admin User?</ion-checkbox>
+                <button type="submit" class="button button-assertive button-block">Submit</button>
+            </form>
         </div>
         <!-- Edit user section -->
         <div ng-show="buttons.activeButton==2">
-            <div class="row">
-                <div class="col">
-                    <label class="item item-input green-item">
-                        <span class="input-label white-text">Name of user</span>
-                        <input type="text" class="white-text" ng-model="managedUser.name">
-                    </label>
+            <form name="editCasinoUserForm" novalidate ng-submit="submitEditCasinoUserForm(editCasinoUserForm)">
+                <div class="row">
+                    <div class="col" ng-class="{ 'has-errors' : editCasinoUserForm.username.$invalid && editCasinoUserForm.$submitted}">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">Username</span>
+                            <input name="username" type="text" class="white-text" ng-model="managedUser.username" required>
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <label class="item item-input green-item">
-                        <span class="input-label white-text">User's email</span>
-                        <input type="text" class="white-text" ng-model="managedUser.email">
-                    </label>
+                <div class="row">
+                    <div class="col" ng-class="{ 'has-errors' : editCasinoUserForm.firstName.$invalid && editCasinoUserForm.$submitted}">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">First Name</span>
+                            <input name="firstName" type="text" class="white-text" ng-model="managedUser.firstName" required>
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive" ng-model="managedUser.mainUser">Main User?</ion-checkbox>
-            <button class="button button-assertive button-block">Submit</button>
+                <div class="row">
+                    <div class="col" ng-class="{ 'has-errors' : editCasinoUserForm.lastName.$invalid && editCasinoUserForm.$submitted}">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">Last Name</span>
+                            <input name="lastName" type="text" class="white-text" ng-model="managedUser.lastName" required>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" ng-class="{ 'has-errors' : editCasinoUserForm.email.$invalid && editCasinoUserForm.$submitted}">
+                        <label class="item item-input green-item">
+                            <span class="input-label white-text">User's email</span>
+                            <input name="email" type="email" class="white-text" ng-model="managedUser.email" required>
+                        </label>
+                    </div>
+                </div>
+                <ion-checkbox class="balanced no-border transparent white-text checkbox-assertive" ng-model="managedUser.role">Admin User?</ion-checkbox>
+                <button type="submit" class="button button-assertive button-block">Edit</button>
+            </form>
         </div>
-
     </ion-content>
 </ion-view>

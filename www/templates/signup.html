@@ -4,24 +4,24 @@
         <form name="registerForm" novalidate ng-submit="submitForm(registerForm)">
             <ion-list>
                 <div class="row">
-                    <div class="col">
-                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.firstName.$invalid && registerForm.$submitted}">
+                    <div class="col"  ng-class="{ 'has-errors' : registerForm.firstName.$invalid && registerForm.$submitted}">
+                        <label class="item item-input green-item">
                             <span class="input-label">First Name</span>
                             <input name="firstName" type="text" ng-model="user.firstName" required>
                         </label>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col">
-                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.lastName.$invalid && registerForm.$submitted}">
+                    <div class="col" ng-class="{ 'has-errors' : registerForm.lastName.$invalid && registerForm.$submitted}">
+                        <label class="item item-input green-item" >
                             <span class="input-label">Last Name</span>
                             <input name="lastName" type="text" ng-model="user.lastName" required>
                         </label>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col">
-                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.hometown.$invalid && registerForm.$submitted}">
+                    <div class="col" ng-class="{ 'has-errors' : registerForm.hometown.$invalid && registerForm.$submitted}">
+                        <label class="item item-input green-item" >
                             <span class="input-label">Hometown</span>
                             <input name="hometown" type="text" ng-model="user.hometown">
                         </label>
@@ -29,8 +29,8 @@
                 </div>
                 
                 <div class="row">
-                    <div class="col">
-                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.country.$invalid && registerForm.$submitted}">
+                    <div class="col" ng-class="{ 'has-errors' : registerForm.country.$invalid && registerForm.$submitted}">
+                        <label class="item item-input green-item" >
                             <span class="input-label">Country</span>
                             <input name="country" type="text" ng-model="user.country">
                         </label>
@@ -50,39 +50,39 @@
             <div class="spacer" style="width: 300px; height: 27px;"></div>
             <ion-list>
                 <div class="row">
-                    <div class="col">
-                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.username.$invalid && registerForm.$submitted}">
+                    <div class="col" ng-class="{ 'has-errors' : registerForm.username.$invalid && registerForm.$submitted}">
+                        <label class="item item-input green-item" >
                             <span class="input-label">Username</span>
-                            <input name="username" type="text" ng-model="user.username" required>
+                            <input name="username" type="text" ng-model="user.username" required ng-disabled={{editing}}>
                         </label>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col">
-                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.email.$invalid && registerForm.$submitted}">
+                    <div class="col" ng-class="{ 'has-errors' : registerForm.email.$invalid && registerForm.$submitted}">
+                        <label class="item item-input green-item" >
                             <span class="input-label">Email</span>
                             <input name="email" type="email" ng-model="user.email" required>
                         </label>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col">
-                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.password.$invalid && registerForm.$submitted}">
+                    <div class="col" ng-class="{ 'has-errors' : registerForm.password.$invalid && registerForm.$submitted}">
+                        <label class="item item-input green-item" >
                             <span class="input-label" >Password</span>
-                            <input name ="password" type="password" ng-model="user.password" required>
+                            <input name ="password" type="password" ng-model="user.password" ng-required={{!editing}}>
                         </label>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col">
-                        <label class="item item-input green-item" ng-class="{ 'has-errors' : registerForm.repeatPassword.$invalid && registerForm.$submitted}">
+                    <div class="col" ng-class="{ 'has-errors' : registerForm.repeatPassword.$invalid && registerForm.$submitted}">
+                        <label class="item item-input green-item" >
                             <span class="input-label">Repeat Password</span>
-                            <input name="repeatPassword" type="password" ng-model="repeatPassword.password" required>
+                            <input name="repeatPassword" type="password" ng-model="repeatPassword.password" ng-required={{!editing}}>
                         </label>
                     </div>
                 </div>
             </ion-list>
-            <button type="submit" class="button button-assertive button-block ">Register</button>
+            <button type="submit" class="button button-assertive button-block ">{{submitButtonlabel}}</button>
         </form>
     </ion-content>
 </ion-view>

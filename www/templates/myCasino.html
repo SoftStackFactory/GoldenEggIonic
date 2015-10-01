@@ -1,10 +1,16 @@
 <ion-view title="Poker World" >
+    <ion-nav-buttons side="right">
+        <button class="button" ng-click="list.shouldShowDelete = !list.shouldShowDelete">
+            Delete
+        </button>
+    </ion-nav-buttons>
     <ion-content padding="true" class="background">
         <h2>My Casino's</h2>
         <div style="overflow:hidden">
-            <ion-list ng-repeat="casino in casinos">
+            <ion-list ng-repeat="casino in casinos" show-delete="list.shouldShowDelete" id="myCasinoList">
                 <ion-item class="green-item white-text" ng-click="itemClicked(casino)" ng-class="{'green-item-active':casino == selectedCasino}">
                     {{casino.name}}
+                    <ion-delete-button class="ion-minus-circled" ng-click="deleteFavorite(casino, $index)"></ion-delete-button>
                 </ion-item>
             </ion-list>
         </div>

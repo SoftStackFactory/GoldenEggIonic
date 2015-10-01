@@ -48,7 +48,8 @@ angular.module('starter', ['ionic','starter.controllers', 'SSFAlerts', 'uiGmapgo
     .state('app.signup', {
       url: '/signup',
       templateUrl: 'templates/signup.html',
-      controller:'RegisterCtrl'
+      controller:'RegisterCtrl',
+      params : { editing: false }
     })
     
     .state('app.mapView', {
