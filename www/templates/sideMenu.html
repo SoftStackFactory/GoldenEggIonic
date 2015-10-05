@@ -45,7 +45,7 @@
          <!--Casino Manage -->
         <div ng-show="isCasino">
             <ion-item class="item-divider">
-              <h2>{{titleInfo}}</h2>
+              {{titleInfo}}
             </ion-item>
             <ion-item menu-close class="item-icon-right" ui-sref="app.manageUsers">
               Admins(Users)
@@ -97,6 +97,10 @@
         
         <!--Logout -->
         <ion-item class="item-divider">
+        </ion-item>
+        <ion-item   ng-show="isCasino" menu-close class="item-icon-right" ui-sref="app.signup({editing:true})">
+          Account
+          <i class="icon ion-ios-arrow-right"></i>
         </ion-item>
         <ion-item menu-close class="item-icon-right" ng-click="logout()">
           Logout

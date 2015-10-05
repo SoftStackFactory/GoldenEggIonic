@@ -1,9 +1,16 @@
 angular.module('GoldenEggServices', [])
 
-.service('CasinoService',[ function(){
+.service('CasinoService',['$window', function($window){
     var service = this;
     var casinos = [];
     var specificCasino = {};
+    
+    var userCasino = $window.localStorage["userCasino"];
+    if(userCasino === null || userCasino === undefined) {
+        userCasino = {};
+    } else {
+        userCasino = JSON.parse(userCasino);
+    }
     
     service.setAll = function(casinosData){
         casinos = casinosData;
@@ -21,6 +28,17 @@ angular.module('GoldenEggServices', [])
         return specificCasino;
     };
     
+    //APp user own casino Info
+    service.getUserCasino = function() {
+        return userCasino;  
+    };
+    
+    service.setUserCasino = function(casinoInfo) {
+        userCasino = casinoInfo;
+        if(userCasino != null && userCasino != undefined) {
+            $window.localStorage["userCasino"] = JSON.stringify(userCasino);
+        }
+    };
 }])
 
 .service('GeopointService', function () {

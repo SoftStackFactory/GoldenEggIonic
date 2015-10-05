@@ -130,9 +130,28 @@
                             <p class="input-label white-text">Add levels:</p>
                         </div>
                         <div class="col col-offset-80">
-                            <br><button class="button button-clear icon ion-plus-circled"></button>
+                            <br><button class="button button-clear icon ion-plus-circled" ng-click="addLevel()"></button>
                         </div>    
+                  </div>
+                <div ng-repeat="repeatElement in repeatDOMElements">
+                    <div class="item item-divider">
+                        <p class="input-label white-text">Level{{$index+1}}</p>
                     </div>
+                    <div class="row">
+                        <div class="col">
+                            <p class="input-label white-text">Small:</p>
+                            <label class="item item-input green-item" id="card-info-input-field" ng-class="{ 'has-errors' : blind.small.$invalid && tournamentForm.$submitted}">
+                                <input name="small" type="text" ng-model="blinds.small" required>
+                            </label>
+                        </div>
+                        <div class="col">
+                            <p class="input-label white-text">Big:</p>
+                            <label class="item item-input green-item" id="card-info-input-field" ng-class="{ 'has-errors' : blind.big.$invalid && tournamentForm.$submitted}">
+                                <input name="big" type="text" ng-model="blinds.big" required>
+                            </label>
+                        </div>
+                    </div>
+                </div>
                                         <!--
                                         in order to make this feature work i believe will need to write a 
                                         directive or it'll need to be part of the tournamentTemplate controller

@@ -19,11 +19,11 @@
                     <button class="button button-full button-assertive icon-right ion-chevron-down" ng-class="{'active':buttons.activeButton==1}" ng-click="infoButtonClicked(1)">Tournaments</button>
                     
                     <!-- tournament subsection of viewCasino Page -->
-                    <div ng-show = "buttons.activeButton == 1">
+                    <div ng-show="buttons.activeButton == 1">
                         <!-- Start of the Tournament Information Card -->
-                        <div class="list card card-info">
+                        <div class="list card card-info" ng-repeat="tournament in tournamentInfo">
                             <div class="item item-divider">
-                                <h3 class="white-text"> Registeration Info for {{tournamentInfo.name}}</h3>
+                                <h3 class="white-text"> Registeration Info for {{tournament.name}}</h3>
                             </div>
                             
                             <div class="item item-body">
@@ -91,19 +91,19 @@
                             -->
                                 <div class="row">
                                     <div class="col">
-                                        <h3 class="white-text">Blinds: {{tournamentInfo.name}}</h3>
+                                        <h3 class="white-text">Blinds:</h3>
                                     </div>
                                 </div>    
                                 <div class="row">    
-                                        <div class="col" ng-repeat="blind in blindInfo">    
-                                            <p class="white-text">{{blind.small}}</p>
+                                        <div class="col">    
+                                            <p class="white-text">Small:{{tounamentInfo.blindInfo.small}}</p>
                                         </div>  
-                                        <div class="col" ng-repeat="blind in blindInfo">    
-                                            <p class="white-text">{{blind.big}}</p>
+                                        <div class="col">    
+                                            <p class="white-text">Big:{{tournamentInfo.blindInfo.small}}</p>
                                         </div>
                                 </div>
                             </div>
-                        </div>    
+                        </div> 
                     </div>
                     
                     <!-- Attempt to make a drop down menu in ionic. Cash Game Button -->
@@ -114,8 +114,8 @@
                         
                         <!-- Start of the Cash Game Information Card -->
                         <div class="list card card-info">
-                            <div class="item item-divider">
-                                <h3 class="white-text">Low Rider {{cashGameInfo.name}}</h3>
+                            <div class="item item-divider" ng-repeat="cashGame in cashGameInfo">
+                                <h3 class="white-text">Low Rider {{cashGame.name}}</h3>
                             </div>
                             <div class="item item-body">
                                 <!-- 
@@ -124,7 +124,7 @@
                                 <div class="row">
                                     <div class="col">
                                         <h3 class="white-text">Type of Poker:</h3>
-                                        <p class="white-text">{{cashGameInfo.style}}</p> 
+                                        <p class="white-text">{{cashGame.style}}</p> 
                                     </div>        
                                 </div>
                                 <!-- 
@@ -137,10 +137,10 @@
                                 </div>    
                                 <div class="row">
                                     <div class="col"> 
-                                       <p class="white-text">Min:{{cashGameInfo.min}}</p>
+                                       <p class="white-text">Min:{{cashGame.min}}</p>
                                     </div>  
                                     <div class="col">    
-                                        <p class="white-text">Max:{{cashGameInfo.max}}</p>
+                                        <p class="white-text">Max:{{cashGame.max}}</p>
                                     </div>  
                                 </div>
                                 <!-- 
@@ -153,10 +153,10 @@
                                 </div>
                                 <div class="row">    
                                     <div class="col">    
-                                        <p class="white-text">Small:{{cashGameInfo.smallBlind}}</p>
+                                        <p class="white-text">Small:{{cashGame.smallBlind}}</p>
                                     </div>  
                                     <div class="col">    
-                                        <p class="white-text">Big:{{cashGameInfo.bigBlind}}</p>
+                                        <p class="white-text">Big:{{cashGame.bigBlind}}</p>
                                     </div>   
                                 </div>
                             </div>

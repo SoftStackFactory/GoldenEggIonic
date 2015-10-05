@@ -19,7 +19,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" ng-hide="isCasino">
                     <div class="col" ng-class="{ 'has-errors' : registerForm.hometown.$invalid && registerForm.$submitted}">
                         <label class="item item-input green-item" >
                             <span class="input-label">Hometown</span>
@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 
-                <div class="row">
+                <div class="row" ng-hide="isCasino">
                     <div class="col" ng-class="{ 'has-errors' : registerForm.country.$invalid && registerForm.$submitted}">
                         <label class="item item-input green-item" >
                             <span class="input-label">Country</span>
@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 
-                <div class="row" ui-sref="app.mapView">
+                <div class="row" ui-sref="app.mapView" ng-hide="isCasino">
                     <div class="col">
                         <ion-item class="item item-icon-right green-item white-text" >
                           Set my location

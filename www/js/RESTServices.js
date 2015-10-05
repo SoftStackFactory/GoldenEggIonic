@@ -163,7 +163,7 @@ function ($http, ENDPOINT_URL) {
     return $http.post(getUrl()+"login",user);
   };
   
-  service.update = function ( token, userID, user) {
+  service.update = function (userID, user,token) {
     return $http({
         url: getUrl()+userID,
         method: "PUT",
