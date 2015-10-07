@@ -1,0 +1,15 @@
+<ion-view title="Poker World" >
+    <ion-content padding="true" class="background">
+        <h3 class="white-text">{{casino.name}} Post History:</h3>
+        <div class="list card card-info" ng-repeat="post in postHistory">
+            <div class="item item-avatar">
+                <!-- <img src="casino pic"> -->
+                <h2 class="white-text">{{casino.name}}</h2>
+                <p class="white-text">{{post.postDate}}</p>
+            </div>
+            <div class="item item-body">
+                <p class="white-text">{{post.text}}</p>
+            </div>  
+        </div>
+    </ion-content>
+</ion-view>    

@@ -115,4 +115,52 @@ angular.module('GoldenEggServices', [])
     service.getPlayerName = function() {
         return player["firstName"] + " " + player["lastName"];
     };
+}])
+
+.service('DynamicColorService', function() {
+    var service = this;
+    
+    service.dynamicTextColor = function(color) {
+        
+        var rgb = hexToRGB(color);
+        var d; 
+    
+        // Counting the perceptive luminance - human eye favors green color... 
+        var a = 1 - ( 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b)/255;
+    
+        if (a < 0.5)
+           d = "#000000"; // bright colors - black font
+        else
+           d = "#ffffff"; // dark colors - white font
+        
+        return d;
+    };
+    
+    function hexToRGB(hex) {
+        var rgb = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        var result = {
+            r: parseInt(rgb[1], 16),
+            g: parseInt(rgb[2], 16),
+            b: parseInt(rgb[3], 16)
+        };
+        return result;
+    }
+})
+.service('ImageConverterService', ['$q', function($q) { 
+    var service = this;
+    
+    service.imageToString = function(imageObject) {
+        var defer = $q.defer();
+        
+        var fileReader = new FileReader();
+
+        fileReader.onload = function(fileLoadedEvent) {
+            var srcData = fileLoadedEvent.target.result; // <--- data: base64
+            var result = srcData.split(',')[1];
+           
+            defer.resolve(result);
+        };
+        fileReader.readAsDataURL(imageObject);  
+        return defer.promise;
+    };
 }]);

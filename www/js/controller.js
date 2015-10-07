@@ -5,7 +5,7 @@ angular.module('starter.controllers', [])
 
 .controller('SideMenuCtrl',['$scope', '$window','MenuButtonService', 'CasinoService', '$ionicHistory', '$state', 'CasinoUsersService', 'UserService', 'SSFAlertsService', 'CasinoPlayerInfoService',
 function($scope, $window, MenuButtonService, CasinoService, $ionicHistory, $state, CasinoUsersService, UserService, SSFAlertsService, CasinoPlayerInfoService) {
-    $scope.isCasino = $window.localStorage["isCasino"] === "true";
+    
     //TODO: uncomment next line to the real information from the local storage
     //$scope.isCasino = $window.localStorage["isCasino"] === "true";
     $scope.titleInfo = {};
@@ -13,6 +13,7 @@ function($scope, $window, MenuButtonService, CasinoService, $ionicHistory, $stat
     settingMenuTitle();
    
     $scope.$on('$ionicView.beforeEnter', function (e, data) {
+        $scope.isCasino = $window.localStorage["isCasino"] === "true";
         $scope.hideMenuButton = MenuButtonService.isHidden;
     });
     
@@ -129,8 +130,10 @@ function($scope, $state, $window, ServerCasinoService,CasinoService) {
     
 }])
 
-.controller('LoginCtrl', ['$scope', '$ionicHistory', '$state', '$window','UserService', 'CasinoUsersService', 'SSFAlertsService', 'MenuButtonService', 'CasinoService', 'ServerCasinoService',
-function($scope, $ionicHistory, $state, $window, UserService, CasinoUsersService, SSFAlertsService,MenuButtonService, CasinoService, ServerCasinoService) {
+.controller('LoginCtrl', ['$scope', '$ionicHistory', '$state', '$window','UserService', 'CasinoUsersService', 'SSFAlertsService', 'MenuButtonService', 'CasinoService', 'ServerCasinoService', '$ionicSideMenuDelegate',
+function($scope, $ionicHistory, $state, $window, UserService, CasinoUsersService, SSFAlertsService,MenuButtonService, CasinoService, ServerCasinoService, $ionicSideMenuDelegate) {
+   
+    $ionicSideMenuDelegate.canDragContent(false);
    
     MenuButtonService.isHidden = true;
     $scope.user = {};
@@ -464,11 +467,12 @@ function($scope, TournamentService, $window, SSFAlertsService){
         big:[]
     };
     
-    //may try and use a pop up to cover this issue.
+    //Their shouldn't be any issues just need to check the backend and probably change some models.
     
     $scope.repeatBlindHtml = [];
     $scope.repeatDOMElements = [];
-                            
+    $scope.DOMcounter = 0;
+    
     function resetTemplate(){
         $scope.tournament.name = "";
         $scope.tournament.style = "";
@@ -485,10 +489,11 @@ function($scope, TournamentService, $window, SSFAlertsService){
     }
     
     $scope.addLevel = function(){
-        $scope.repeatDOMElements.push({small:0 , big:0});
+        $scope.DOMcounter++;
+        $scope.repeatDOMElements.push($scope.DOMcounter);
     };
     
-    /* this controller requires major renovation!!!!
+    //this controller requires major renovation!!!!
     $scope.submitTemplate = function(tournament){
         if(tournament.$valid){
             
@@ -524,11 +529,13 @@ function($scope, TournamentService, $window, SSFAlertsService){
             });
         }    
     };
-    */ 
 }])
 
 .controller('CashGameTemplateCtrl', ['$scope', 'CashGameService', '$window', 'SSFAlertsService',
 function($scope, TournamentService, $window, SSFAlertsService){
+    
+//This controller should be good to go just need to correct the backend (or check) in order to sure it's safe to push
+    
     $scope.cashGame = {};
     
     function resetTemplate(){
@@ -597,12 +604,12 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
     // We need to keep timers that are stable and will continue the countdown once they're recieved but....
     // wouldn't take too much time to it on the client-side?
     
-    $scope.casinoInfo = {};
-    $scope.blinds = [];
-    $scope.tournamentInfo = [];
-    $scope.currentTournaments = [];
-    $scope.cashGameInfo = [];
-    $scope.currentCashGames = [];
+    $scope.casinoInfo = { };
+    $scope.blinds = [ ];
+    $scope.tournaments = [ ];
+    $scope.currentTournaments = [ ];
+    $scope.cashGameInfo = [ ];
+    $scope.currentCashGames = [ ];
     $scope.settingInfoCalls = [{
             serviceUsed: TournamentService, 
             infoUsed: [ ],
@@ -630,15 +637,16 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
         activeButton: 0
     };
     
-    var fetchingInfo = getInformation($scope.currentHttpCalls[$scope.pos]);
     
     $scope.$on('$ionicView.beforeEnter', function() {
         resetButton();
         
+        var fetchingInfo = getInformation($scope.currentHttpCalls[$scope.pos]);
+        
         fetchingInfo.then(function(success){
             return getInformation($scope.currentHttpCalls[$scope.pos]);
         }).then(function(success){
-            blindsToTournament($scope.tournamentInfo, $scope.blinds);
+            
         });
         
     });
@@ -656,18 +664,18 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
     //setting the blinds and tournaments to the same object in the array
     //this is because of how the ng-repeat directive can't iterate through two arrays at the same time
     
-    function blindsToTournament(tournaments, blinds){
-        tournaments.forEach( function(tournament){ 
-            blinds.forEach( function(specificBlind){
+    /* function blindsToTournament(){
+        $scope.tournaments.forEach( function(tournament){ 
+            $scope.blinds.forEach( function(specificBlind){
                 if(tournament.id === specificBlind.tournamentId){
-                    console.log("set the blinds to tournamentInfo");
+                    console.log("set the blinds to tournaments");
                     return tournament.blindInfo = specificBlind;
                     // want to find a method for arrays that can allow me to shrink the array as it goes through interations
                     //the idea is if something meets the if statement critea above then remove from array to make it faster?
                 }
             });
         });
-    }
+    } */
     
     //getting casino information for the casino view page
     
@@ -719,18 +727,19 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
         
             $scope.settingInfoCalls.forEach(function(call, index){
                 if(index === 0 || index === 1){
-                    call.infoUsed = angular.copy($scope.currentTournaments);
+                    call.infoUsed = $scope.currentTournaments;
                 } else if (index === 2){
-                    call.infoUsed = angular.copy($scope.currentCashGames);
+                    call.infoUsed = $scope.currentCashGames;
                 }
+
                 call.infoUsed.forEach(function(individualModel){
                     var objID; // the object ID I need
                     if(index === 0 || index === 1){
                         objID = individualModel.tournamentId;
-                    } else if (index === 1){
+                    } else if (index === 2){
                         objID = individualModel.cashGameId;
                     }
-
+                    
                     if(call.infoUsed.length != 0){
                         call.serviceUsed.getSpecific(objID, $window.localStorage["token"])
                             .then(function(response){
@@ -738,7 +747,7 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
                                 call.infoStored = response.data;
                                 console.log(call.infoStored);
                                 if(index === 0){
-                                    $scope.tournamentInfo = call.infoStored;
+                                    $scope.tournaments = call.infoStored;
                                 } else if (index === 1){
                                     $scope.blinds = call.infoStored;
                                 }
@@ -1081,12 +1090,85 @@ function($scope, $window, CasinoService, $ionicSideMenuDelegate, uiGmapIsReady,
     
 }])
 
-.controller('CreatePostCtrl', ['$scope', 'SSFAlertsService', '$window',
-    function($scope, SSFAlertsService, $window){
+.controller('CreatePostCtrl', ['$scope', 'SSFAlertsService', '$window', 'PostService', '$state',
+    function($scope, SSFAlertsService, $window, PostService, $state){
         $scope.post = {};
         
         $scope.post.postDate = new Date();
         $scope.post.casinoId = $window.localStorage["casinoID"];
+        
+        function cleaningPostFields(){
+            $scope.post.text = "";
+        }
+        
+        $scope.createPost = function(form){
+            if(form.$valid){
+                
+                PostService.create($scope.post, $window.localStorage["token"])
+                    .then(function(response){
+                        console.log(response);
+                        if(response.status === 200){
+                            SSFAlertsService.showAlert("New Post", "You have just created a new post!");
+                            $state.go('app.postHistory');
+                            
+                        }  else if(response.status === 401){
+                            SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
+                        } else if (response.status === null){
+                            SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
+                        } else{
+                            SSFAlertsService.showAlert("Error", "Something went wrong, try again");
+                        }
+                        
+                        form.$setPristine;
+                        cleaningPostFields();
+                        
+                    }, function(response){
+                            if(response.status === 401){
+                                SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
+                            } else if (response.status === null){
+                                SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
+                            } else{
+                                SSFAlertsService.showAlert("Error", "Something went wrong, try again");
+                        }
+                    });
+            }
+        };
+    
+}])
+
+.controller('PostHistoryCtrl', [ '$scope', '$window', 'PostService', 'SSFAlertsService', '$on', 
+    function($scope, $window, PostService, SSFAlertsService, $on){
+        $scope.postHistory = [];
+        
+        //this controller is ready for testing i believe just need posts to test with
+        
+        $scope.$on('ionicView.beforeEnter', function(){
+            
+            PostService.getPosts($window.localStorage["casinoID"], $window.localStorage["token"])
+                    .then(function(response){
+                        console.log(response);
+                        if(response.status === 200){
+                            $scope.postHistory = response.data;
+                            console.log("recieved all of the posts");
+                            
+                        }  else if(response.status === 401){
+                            SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
+                        } else if (response.status === null){
+                            SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
+                        } else{
+                            SSFAlertsService.showAlert("Error", "Something went wrong, try again");
+                        }
+                    }, function(response){
+                            if(response.status === 401){
+                                SSFAlertsService.showAlert("Error", "You're unauthorized to perform such task.");
+                            } else if (response.status === null){
+                                SSFAlertsService.showAlert("Error", "The connection with the server was unsuccessful, check your internet connection and try again later.");
+                            } else{
+                                SSFAlertsService.showAlert("Error", "Something went wrong, try again");
+                        }
+            });
+        });
+        
     
 }])
 
@@ -1234,4 +1316,80 @@ function($scope, $window, SSFAlertsService, CasinoUsersService) {
             SSFAlertsService.showAlert("Warning", "Please supply the information required.");
         }
     };
+}])
+.controller('CustomizeCtrl',['$scope', '$window', 'SSFAlertsService','DynamicColorService', 'CustomizeService', 'ImageConverterService',
+function($scope, $window, SSFAlertsService, DynamicColorService, CustomizeService, ImageConverterService) {
+    $scope.colorPicker = {};
+    $scope.pickerOptions = {
+        preferredFormat: "hex",
+        flat: true,
+        color:"#444444",
+        showButtons: false
+    };
+    
+    var imageFile;
+    
+    $scope.selectedColor =  "";
+    $scope.textColor = "";
+    
+    var customizations = { };
+    
+    $scope.pickerChoose = function(color) {
+        $scope.selectedColor = color;
+        $scope.textColor = DynamicColorService.dynamicTextColor(color);
+    };
+    
+    $scope.fileNameChanged = function(file) {
+        imageFile = file.files[0];
+    };
+    
+    $scope.submitForm = function(form) {
+        if(imageFile === undefined) {
+            sendCustomizations();
+        }else {
+            ImageConverterService.imageToString(imageFile)
+            .then(function(response) {
+                customizations["icon"] = response;
+                sendCustomizations();
+            }, function(response) {
+                SSFAlertsService.showAlert("Error", "The image could not be loaded.");
+            });
+        }
+    };
+
+    function sendCustomizations() {
+        customizations["background"] = $scope.selectedColor;
+        customizations["casinoId"] = $window.localStorage["casinoID"];
+        console.log(customizations);
+        //Check if casino ID already has customizations. Update if it does, create otherwise.
+        CustomizeService.get($window.localStorage["casinoID"], $window.localStorage["token"])
+        .then(function(response) {
+            var serviceToUse;
+            var successMessage = "";
+            //Create
+            if(response.data.length == 0) {
+                if(customizations["icon"] == undefined) {
+                    SSFAlertsService.showAlert("Warning", "Please include an image for your icon.");
+                    return;
+                }else {
+                    successMessage = "Icon uploaded correctly.";
+                    serviceToUse = CustomizeService.create(customizations, $window.localStorage["token"]);
+                }
+            }else {
+            //Update
+                var customizationInfo = response.data[0];
+                successMessage = "Changes submitted correctly.";
+                serviceToUse = CustomizeService.update(customizations, customizationInfo["id"], $window.localStorage["token"]);
+            }
+            serviceToUse.then(function(response) {
+                console.log(response);
+                imageFile = undefined;
+                SSFAlertsService.showAlert("Good news", successMessage);
+            }, function(response) {
+                console.log(response);
+            });
+        }, function(response) {
+            SSFAlertsService.showAlert("Warning", "The changes could not be commited at the moment, try again later.");
+        });
+    }
 }]);

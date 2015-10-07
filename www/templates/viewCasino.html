@@ -21,7 +21,7 @@
                     <!-- tournament subsection of viewCasino Page -->
                     <div ng-show="buttons.activeButton == 1">
                         <!-- Start of the Tournament Information Card -->
-                        <div class="list card card-info" ng-repeat="tournament in tournamentInfo">
+                        <div class="list card card-info" ng-repeat="tournament in tournaments">
                             <div class="item item-divider">
                                 <h3 class="white-text"> Registeration Info for {{tournament.name}}</h3>
                             </div>
@@ -37,7 +37,7 @@
                                     </div>        
                                     <div class="col">    
                                         <h3 class="white-text">Entry Cost</h3>
-                                        <p class="white-text">{{tournamentInfo.entryCost}}</p>
+                                        <p class="white-text">{{tournament.entryCost}}</p>
                                     </div>  
                                 </div>
                                 <!-- 
@@ -46,11 +46,11 @@
                                 <div class="row">    
                                     <div class="col">    
                                         <h3 class="white-text"># of Reloads</h3>
-                                        <p class="white-text">{{tournamentInfo.numReloads}}</p>
+                                        <p class="white-text">{{tournament.numReloads}}</p>
                                     </div>  
                                     <div class="col">    
                                         <h3 class="white-text">Reload Cost</h3>
-                                        <p class="white-text">{{tournamentInfo.reloadCost}}</p>
+                                        <p class="white-text">{{tournament.reloadCost}}</p>
                                     </div>   
                                 </div>
                                 <!-- 
@@ -59,11 +59,11 @@
                                 <div class="row">    
                                     <div class="col">    
                                         <h3 class="white-text">Entry Stack</h3></h3>
-                                        <p class="white-text">{{tournamentInfo.startStack}}<p>
+                                        <p class="white-text">{{tournament.startStack}}<p>
                                     </div>  
                                     <div class="col">    
                                         <h3 class="white-text">Reload Stack</h3>
-                                        <p class="white-text">{{tournamentInfo.reloadStack}}</p>
+                                        <p class="white-text">{{tournament.reloadStack}}</p>
                                     </div>   
                                 </div>
                             </div>
@@ -96,10 +96,10 @@
                                 </div>    
                                 <div class="row">    
                                         <div class="col">    
-                                            <p class="white-text">Small:{{tounamentInfo.blindInfo.small}}</p>
+                                            <p class="white-text">Small:{{tounament.blindInfo.small}}</p>
                                         </div>  
                                         <div class="col">    
-                                            <p class="white-text">Big:{{tournamentInfo.blindInfo.small}}</p>
+                                            <p class="white-text">Big:{{tournament.blindInfo.small}}</p>
                                         </div>
                                 </div>
                             </div>
@@ -113,8 +113,8 @@
                     <div ng-show = "buttons.activeButton == 2">
                         
                         <!-- Start of the Cash Game Information Card -->
-                        <div class="list card card-info">
-                            <div class="item item-divider" ng-repeat="cashGame in cashGameInfo">
+                        <div class="list card card-info" ng-repeat="cashGame in cashGameInfo">
+                            <div class="item item-divider">
                                 <h3 class="white-text">Low Rider {{cashGame.name}}</h3>
                             </div>
                             <div class="item item-body">

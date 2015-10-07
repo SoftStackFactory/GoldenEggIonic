@@ -1,0 +1,15 @@
+<ion-view title="Customization">
+    <ion-content padding="true" ng-style="{backgroundColor:selectedColor}" >
+        <form name="customizeForm" novalidate ng-submit="submitForm(customizeForm)">
+            <div ng-style="{color:textColor}"> 
+                <h4>Select the background color you want to appear in your casino view.</h4> 
+                <div class="center-item">
+                    <spectrum-colorpicker ng-model="selectedColor" options="pickerOptions" on-change="pickerChoose(color)"></spectrum-colorpicker>
+                </div>
+                <h4>Upload an image of your casino logo.</h4>
+                <input name="logo" type="file" accept="image/*" onchange="angular.element(this).scope().fileNameChanged(this)">
+                <button type="submit" class="button button-assertive button-block">Save changes</button>
+            </div>
+        </form>
+    </ion-content>
+</ion-view>

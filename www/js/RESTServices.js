@@ -315,4 +315,70 @@ function ($http, ENDPOINT_URL) {
         params: { access_token: token }
       });
     };
+}])
+
+.service('PostService', [ '$http', 'ENDPOINT_URL', 
+  function($http, ENDPOINT_URL){
+    var service = this,
+    path = 'posts/';
+    
+    function getUrl(){
+      return ENDPOINT_URL + path;
+    }
+    
+    service.getPosts = function(casinoID, token){
+      return $http.get(getUrl()+"?filter[where][casinoId]="+casinoID, {
+      params: { access_token: token }
+      });
+    };
+    
+    service.create = function(posts, token){
+      return $http({
+                url: getUrl(),
+                method: "POST",
+                data: JSON.stringify(posts),
+                headers: {
+                    'Authorization': token
+                }
+      });
+    };
+  }])
+  
+.service('CustomizeService', [ '$http', 'ENDPOINT_URL', 
+function($http, ENDPOINT_URL){
+  var service = this,
+  path = 'casinoCustumizations/';
+   
+  function getUrl(){
+    return ENDPOINT_URL + path;
+  }
+    
+  service.create = function(info, token) {
+    console.log(token);
+    return $http({
+      url: getUrl(),
+      method: "POST",
+      data: JSON.stringify(info),
+      headers: {
+          'Authorization': token
+      }
+    });
+  };
+  
+  service.update = function(info, customizationID ,token) {
+    return $http({
+        url: getUrl()+customizationID,
+        method: "PUT",
+        data: JSON.stringify(info),
+        headers: {
+            'Authorization': token
+        }
+    });
+  };
+  
+  service.get = function(casinoID, token) {
+    return $http.get(getUrl()+"?filter[where][casinoId]="+casinoID, {
+        params: { access_token: token }
+      });
+  };
 }]);

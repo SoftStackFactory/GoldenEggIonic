@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic','starter.controllers', 'SSFAlerts', 'uiGmapgoogle-maps', 'RESTConnection', 'GoldenEggServices', 'GoldenEggDirectives'])
+angular.module('starter', ['ionic','starter.controllers', 'SSFAlerts', 'uiGmapgoogle-maps', 'RESTConnection', 'GoldenEggServices', 'GoldenEggDirectives', 'angularSpectrumColorpicker'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -97,11 +97,21 @@ angular.module('starter', ['ionic','starter.controllers', 'SSFAlerts', 'uiGmapgo
       templateUrl: 'templates/casino/createPost.html',
       controller: 'CreatePostCtrl'
     })
+    .state('app.postHistory', {
+      url: '/postHistory',
+      templateUrl: 'templates/casino/postHistory.html',
+      controller: 'PostHistoryCtrl'
+    })
     
     .state('app.manageUsers', {
       url: '/manageUsers',
       templateUrl: 'templates/casino/manageUsers.html',
       controller: 'ManageUsersCtrl'
+    })
+    .state('app.customize', {
+      url: '/customize',
+      templateUrl: 'templates/casino/casinoCustomization.html',
+      controller: 'CustomizeCtrl'
     });
     /*.state('app.editingCasinoView', {
       url: '/editingCasinoView',
